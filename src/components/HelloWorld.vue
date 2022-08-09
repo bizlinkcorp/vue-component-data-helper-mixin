@@ -107,14 +107,33 @@
         >
       </li>
     </ul>
+    <vue-data-binder-test view-state-key="viewState" path="aaaa">
+      <vue-data-binder-test path="bbbb">
+        <vue-data-binder-test path="cccc">
+          <vue-data-reciever-test id="id1" />
+          <vue-data-reciever-test id="id2" />
+        </vue-data-binder-test>
+      </vue-data-binder-test>
+      <vue-data-binder-test module="moduleTest" path="xxxx">
+        <vue-data-binder-test path="yyyy">
+          <vue-data-reciever-test id="ida" />
+        </vue-data-binder-test>
+      </vue-data-binder-test>
+    </vue-data-binder-test>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
+import VueDataBinderTest from './VueDataBinderTest.vue';
+import VueDataRecieverTest from './VueDataRecieverTest.vue';
 
 export default Vue.extend({
-  name: "HelloWorld",
+  name: 'HelloWorld',
+  components: {
+    VueDataBinderTest,
+    VueDataRecieverTest,
+  },
   props: {
     msg: String,
   },

@@ -1,7 +1,10 @@
 import { defineComponent } from 'vue';
+import StoreValueMethodMixins from './StoreValueMethodMixins';
+import { ItemViewState } from '../store/index';
 
 export default defineComponent({
   name: 'VueDataRecieverTest',
+  mixins: [StoreValueMethodMixins],
   inject: {
     path: {
       from: 'parentPath',
@@ -19,9 +22,13 @@ export default defineComponent({
       from: 'parentDataKey',
       default: undefined,
     },
+    parentViewState: {
+      from: 'parentViewState',
+      default: () => ({}),
+    },
   },
   props: {
-    id: {
+    itemId: {
       type: String,
       required: true,
     },
@@ -29,38 +36,50 @@ export default defineComponent({
   computed: {
     dataId() {
       return (
-        (this.module ? `${this.module}.` : '') +
         (this.dataKey ? `${this.dataKey}.` : '') +
         (this.path ? `${this.path}.` : '') +
-        this.id
+        this.itemId
       );
+    },
+    moduledDataId() {
+      return (this.module ? `${this.module}.` : '') + this.dataId;
     },
     viewStateId() {
       return (
-        (this.module ? `${this.module}.` : '') +
         (this.viewStateKey ? `${this.viewStateKey}.` : '') +
         (this.path ? `${this.path}.` : '') +
-        this.id
+        this.itemId
       );
     },
-    storeData() {
-      return this.getStoreValue(this.$store.state, this.dataId.split('.'));
+    moduledViewStateId() {
+      return (this.module ? `${this.module}.` : '') + this.viewStateId;
     },
-    storeViewState() {
-      return this.getStoreValue(this.$store.state, this.viewStateId.split('.'));
+    storeData: {
+      get() {
+        return this.getStoreValue(
+          this.$store.state,
+          this.moduledDataId.split('.')
+        );
+      },
+      set(newVal: any) {
+        const commitTargetName =
+          (this.module ? `${this.module}/` : '') + 'setStoreState';
+        this.$store.commit(commitTargetName, {
+          key: this.dataId,
+          value: newVal,
+        });
+      },
     },
-  },
-  methods: {
-    getStoreValue(parent: any, paths: string[], idx = 0): any {
-      const pathValue = parent[paths[idx]];
-      const pathValueIsUndefined = !pathValue;
-
-      if (idx === paths.length - 1 || pathValueIsUndefined) {
-        // 最下層 もしくは、undefined
-        return pathValue;
-      }
-      // インデックスをずらして再帰呼び出し
-      return this.getStoreValue(pathValue, paths, idx + 1);
+    storeViewState(): ItemViewState {
+      // プロパティ優先順位： 自プロパティ > 親プロパティ > デフォルト
+      const itemViewState = this.getStoreValue(
+        this.$store.state,
+        this.moduledViewStateId.split('.')
+      ) as ItemViewState;
+      const parentViewState = this.parentViewState as ItemViewState;
+      return {
+        disabled: itemViewState?.disabled ?? parentViewState?.disabled ?? false,
+      };
     },
   },
 });

@@ -110,13 +110,22 @@
     <vue-data-binder-test view-state-key="viewState" path="aaaa">
       <vue-data-binder-test path="bbbb">
         <vue-data-binder-test path="cccc">
-          <vue-data-reciever-test id="id1" />
-          <vue-data-reciever-test id="id2" />
+          <vue-data-reciever-test item-id="id1" />
+          <vue-data-reciever-test item-id="id2" />
         </vue-data-binder-test>
       </vue-data-binder-test>
-      <vue-data-binder-test module="moduleTest" path="xxxx">
+    </vue-data-binder-test>
+    <vue-data-binder-test
+      module="moduleTest"
+      view-state-key="viewState"
+      path="aaaa"
+    >
+      <vue-data-binder-test path="xxxx">
         <vue-data-binder-test path="yyyy">
-          <vue-data-reciever-test id="ida" />
+          <vue-data-reciever-test item-id="ida" />
+        </vue-data-binder-test>
+        <vue-data-binder-test path="zzzz">
+          <vue-data-reciever-test item-id="idb" />
         </vue-data-binder-test>
       </vue-data-binder-test>
     </vue-data-binder-test>

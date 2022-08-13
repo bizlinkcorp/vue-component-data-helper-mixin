@@ -19,30 +19,35 @@ export default defineComponent({
     },
   },
   computed: {
+    parentInfo() {
+      return this.dataBindInfo as DataBinderInfo;
+    },
     dataId() {
-      const info = this.dataBindInfo as DataBinderInfo;
-      return (info.dataKey ? `${info.dataKey}.` : '') + (info.path ? `${info.path}.` : '') + this.itemId;
+      return (
+        (this.parentInfo.dataKey ? `${this.parentInfo.dataKey}.` : '') +
+        (this.parentInfo.path ? `${this.parentInfo.path}.` : '') +
+        this.itemId
+      );
     },
     moduledDataId() {
-      const info = this.dataBindInfo as DataBinderInfo;
-      console.log(this.dataId);
-      return (info.module ? `${info.module}.` : '') + this.dataId;
+      return (this.parentInfo.module ? `${this.parentInfo.module}.` : '') + this.dataId;
     },
     viewStateId() {
-      const info = this.dataBindInfo as DataBinderInfo;
-      return (info.viewStateKey ? `${info.viewStateKey}.` : '') + (info.path ? `${info.path}.` : '') + this.itemId;
+      return (
+        (this.parentInfo.viewStateKey ? `${this.parentInfo.viewStateKey}.` : '') +
+        (this.parentInfo.path ? `${this.parentInfo.path}.` : '') +
+        this.itemId
+      );
     },
     moduledViewStateId() {
-      const info = this.dataBindInfo as DataBinderInfo;
-      return (info.module ? `${info.module}.` : '') + this.viewStateId;
+      return (this.parentInfo.module ? `${this.parentInfo.module}.` : '') + this.viewStateId;
     },
     storeData: {
       get() {
         return this.getStoreValue(this.$store.state, this.moduledDataId.split('.'));
       },
       set(newVal: any) {
-        const info = this.dataBindInfo as DataBinderInfo;
-        const commitTargetName = (info.module ? `${info.module}/` : '') + 'setStoreState';
+        const commitTargetName = (this.parentInfo.module ? `${this.parentInfo.module}/` : '') + 'setStoreState';
         this.$store.commit(commitTargetName, {
           key: this.dataId,
           value: newVal,
@@ -50,11 +55,10 @@ export default defineComponent({
       },
     },
     storeViewState(): ItemViewState {
-      // プロパティ優先順位： 自プロパティ > 親プロパティ > デフォルト
+      // 設定優先順位： 自ViewState > 親ViewState > デフォルト
       const itemViewState = this.getStoreValue(this.$store.state, this.moduledViewStateId.split('.')) as ItemViewState;
-      const info = this.dataBindInfo as DataBinderInfo;
       return {
-        disabled: itemViewState?.disabled ?? info.viewState?.disabled ?? false,
+        disabled: itemViewState?.disabled ?? this.parentInfo.viewState?.disabled ?? false,
       };
     },
   },

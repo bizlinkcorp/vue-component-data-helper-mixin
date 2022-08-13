@@ -1,5 +1,7 @@
+import { DataBinderInfo } from './VueDataBinderTest';
 export default {
   methods: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getStoreValue(parent: any, paths: string[], idx = 0): any {
       const pathValue = parent[paths[idx]];
       const pathValueIsUndefined = !pathValue;

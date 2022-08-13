@@ -2,11 +2,13 @@ import { defineComponent } from 'vue';
 import StoreValueMethodMixins from './StoreValueMethodMixins';
 import { ItemViewState } from '../store/index';
 
-// FIXME オブジェクトに変更する
+/**
+ * データバインド情報
+ */
 export interface DataBinderInfo {
   readonly path?: string;
   readonly module?: string;
-  readonly viewStateKey: string;
+  readonly viewStateKey?: string;
   readonly dataKey?: string;
   readonly viewState: ItemViewState;
 }
@@ -86,35 +88,47 @@ export default defineComponent({
       return (this.parentInfo.path ? `${this.parentInfo.path}.` : '') + this.path;
     },
     currentModule() {
-      const info = this.dataBindInfo as DataBinderInfo;
-      return this.module ?? info.module;
+      return this.module ?? this.parentInfo.module;
     },
     currentViewStateKey() {
-      const info = this.dataBindInfo as DataBinderInfo;
-      return this.viewStateKey ?? info.viewStateKey;
+      return this.viewStateKey ?? this.parentInfo.viewStateKey;
     },
     currentDataKey() {
-      const info = this.dataBindInfo as DataBinderInfo;
-      return this.dataKey ?? info.dataKey;
+      return this.dataKey ?? this.parentInfo.dataKey;
     },
     currentViewState(): ItemViewState {
-      const info = this.dataBindInfo as DataBinderInfo;
-      const currentViewState = this.storeViewState as ItemViewState;
       return {
-        // プロパティ優先順位： 自プロパティ > 親プロパティ > デフォルト
+        // 設定優先順位： 自ViewState > 親ViewState
         // disabled プロパティ
-        disabled: currentViewState?.disabled ?? info.viewState?.disabled ?? false,
+        disabled: this.currentStoreViewState?.disabled ?? this.parentStoreViewState?.disabled,
         // TODO 他の状態があればここを修正する
       };
     },
-    viewStatePath() {
-      return (this.currentViewStateKey ? `${this.currentViewStateKey}.` : '') + this.currentPath;
+    parentViewStatePath() {
+      return (
+        (this.currentModule ? `${this.currentModule}.` : '') +
+        (this.currentViewStateKey ? `${this.currentViewStateKey}` : '') +
+        (this.parentInfo.path ? `.${this.parentInfo.path}` : '')
+      );
     },
-    moduledViewStatePath() {
-      return (this.currentModule ? `${this.currentModule}.` : '') + this.viewStatePath;
+    currentViewStatePath() {
+      return (
+        (this.currentModule ? `${this.currentModule}.` : '') +
+        (this.currentViewStateKey ? `${this.currentViewStateKey}.` : '') +
+        this.currentPath
+      );
     },
-    storeViewState() {
-      return this.getStoreValue(this.$store.state, this.moduledViewStatePath.split('.'));
+    currentStoreViewState() {
+      return this.getStoreValue(this.$store.state, this.currentViewStatePath.split('.'));
+    },
+    parentStoreViewState() {
+      // 自身がrootの場合に親のViewStateが存在しないケースがあるので、存在していない場合は使用する。
+      const parentStore = this.getStoreValue(this.$store.state, this.parentViewStatePath.split('.')) as ItemViewState;
+
+      return {
+        disabled: this.parentInfo.viewState?.disabled ?? parentStore?.disabled,
+        // TODO 他の状態があればここを修正する
+      };
     },
   },
 });

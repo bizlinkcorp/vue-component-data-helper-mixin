@@ -80,7 +80,7 @@ export default defineComponent({
   },
   computed: {
     isRootDataBinder() {
-      return !this.inherit;
+      return this.inherit === undefined || !this.inherit;
     },
     propPath() {
       const propPath = this.path ?? '';
@@ -124,8 +124,9 @@ export default defineComponent({
     },
     rootViewStatePath() {
       return (
-        (this.currentModule ? `${this.currentModule}` : '') +
-        (this.currentViewStateKey ? `.${this.currentViewStateKey}` : '')
+        (this.currentModule ?? '') +
+        (!!this.currentModule && !!this.currentViewStateKey ? '.' : '') +
+        (this.currentViewStateKey ?? '')
       );
     },
     currentViewStatePath() {

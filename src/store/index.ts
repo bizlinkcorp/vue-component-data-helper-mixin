@@ -47,8 +47,8 @@ export default new Vuex.Store({
       },
     },
     viewState: {
+      disabled: true,
       aaaa: {
-        disabled: true,
         bbbb: {
           cccc: {
             id1: {
@@ -75,9 +75,7 @@ export default new Vuex.Store({
             },
           },
         },
-        viewState: {
-          disabled: true,
-        } as ViewStateTree,
+        viewState: {} as ViewStateTree,
       },
       mutations: {
         setStoreState,

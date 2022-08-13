@@ -1,6 +1,7 @@
 import { defineComponent } from 'vue';
 import StoreValueMethodMixins from './StoreValueMethodMixins';
 import { ItemViewState } from '../store/index';
+import { EMPTY_OBJECT } from './share';
 
 /**
  * データバインド情報
@@ -15,13 +16,15 @@ export interface DataBinderInfo {
 
 // FIXME viewStateKey | dataKey はplugin利用時に決定する方が良い。
 
+const EMPTY_DATA_BIND_INFO = EMPTY_OBJECT;
+
 export default defineComponent({
   name: 'VueDataBinderTest',
   mixins: [StoreValueMethodMixins],
   inject: {
     dataBindInfo: {
       from: 'parentDataBindInfo',
-      default: () => ({}),
+      default: () => EMPTY_DATA_BIND_INFO,
     },
   },
   provide() {
@@ -59,11 +62,6 @@ export default defineComponent({
       required: false,
       default: undefined,
     },
-    module: {
-      type: String,
-      required: false,
-      default: undefined,
-    },
     viewStateKey: {
       type: String,
       required: false,
@@ -81,35 +79,53 @@ export default defineComponent({
     },
   },
   computed: {
+    isRootDataBinder() {
+      return !this.inherit;
+    },
+    propPath() {
+      const propPath = this.path ?? '';
+      if (propPath.indexOf(':') >= 0) {
+        return this.path.split(':')[1];
+      }
+      return this.path;
+    },
+    propPathModule() {
+      const propPath = this.path ?? '';
+      if (propPath.indexOf(':') >= 0) {
+        if (!this.isRootDataBinder) {
+          throw new Error(`ルートパスではないが、モジュールが設定されている ( path="${this.path}" )`);
+        }
+        return this.path.split(':')[0];
+      }
+      return undefined;
+    },
     parentInfo() {
-      return this.dataBindInfo as DataBinderInfo;
+      // 継承設定がない場合は、空の親オブジェクトを返却する
+      return (this.inherit ? this.dataBindInfo : EMPTY_DATA_BIND_INFO) as DataBinderInfo;
     },
     currentPath() {
-      return (this.inherit ? (this.parentInfo.path ? `${this.parentInfo.path}.` : '') : '') + this.path;
+      return (this.parentInfo.path ? `${this.parentInfo.path}.` : '') + this.propPath;
     },
     currentModule() {
-      return this.module ?? (this.inherit ? this.parentInfo.module : undefined);
+      return this.propPathModule ?? this.parentInfo.module;
     },
     currentViewStateKey() {
-      return this.viewStateKey ?? (this.inherit ? this.parentInfo.viewStateKey : undefined);
+      return this.viewStateKey ?? this.parentInfo.viewStateKey;
     },
     currentDataKey() {
-      return this.dataKey ?? (this.inherit ? this.parentInfo.dataKey : undefined);
+      return this.dataKey ?? this.parentInfo.dataKey;
     },
     currentViewState(): ItemViewState {
       return {
         // 設定優先順位： 自ViewState > 親ViewState
         // disabled プロパティ
-        disabled:
-          this.currentStoreViewState?.disabled ?? (this.inherit ? this.parentStoreViewState?.disabled : undefined),
-        // TODO 他の状態があればここを修正する
+        disabled: this.currentStoreViewState?.disabled ?? this.parentStoreViewState?.disabled,
       };
     },
-    parentViewStatePath() {
+    rootViewStatePath() {
       return (
-        (this.currentModule ? `${this.currentModule}.` : '') +
-        (this.currentViewStateKey ? `${this.currentViewStateKey}` : '') +
-        (this.parentInfo.path ? `.${this.parentInfo.path}` : '')
+        (this.currentModule ? `${this.currentModule}` : '') +
+        (this.currentViewStateKey ? `.${this.currentViewStateKey}` : '')
       );
     },
     currentViewStatePath() {
@@ -119,17 +135,16 @@ export default defineComponent({
         this.currentPath
       );
     },
-    currentStoreViewState() {
+    currentStoreViewState(): ItemViewState {
       return this.getStoreValue(this.$store.state, this.currentViewStatePath.split('.'));
     },
-    parentStoreViewState() {
-      // 自身がrootの場合に親のViewStateが存在しないケースがあるので、存在していない場合は使用する。
-      const parentStore = this.getStoreValue(this.$store.state, this.parentViewStatePath.split('.')) as ItemViewState;
-
-      return {
-        disabled: this.parentInfo.viewState?.disabled ?? parentStore?.disabled,
-        // TODO 他の状態があればここを修正する
-      };
+    parentStoreViewState(): ItemViewState {
+      if (this.isRootDataBinder) {
+        // 自身がrootの場合は store から直接取得する。
+        const parentStore = this.getStoreValue(this.$store.state, this.rootViewStatePath.split('.')) as ItemViewState;
+        return { disabled: parentStore?.disabled };
+      }
+      return { disabled: this.parentInfo.viewState?.disabled };
     },
   },
 });

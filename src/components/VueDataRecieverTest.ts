@@ -2,6 +2,9 @@ import { defineComponent } from 'vue';
 import StoreValueMethodMixins from './StoreValueMethodMixins';
 import { ItemViewState } from '../store/index';
 import { DataBinderInfo } from './VueDataBinderTest';
+import { EMPTY_OBJECT } from './share';
+
+const EMPTY_DATA_BIND_INFO = EMPTY_OBJECT;
 
 export default defineComponent({
   name: 'VueDataRecieverTest',
@@ -9,7 +12,7 @@ export default defineComponent({
   inject: {
     dataBindInfo: {
       from: 'parentDataBindInfo',
-      default: () => ({}),
+      default: () => EMPTY_DATA_BIND_INFO,
     },
   },
   props: {
@@ -47,6 +50,7 @@ export default defineComponent({
         return this.getStoreValue(this.$store.state, this.moduledDataId.split('.'));
       },
       set(newVal: any) {
+        // FIXME store mutation メソッド名がリテラル
         const commitTargetName = (this.parentInfo.module ? `${this.parentInfo.module}/` : '') + 'setStoreState';
         this.$store.commit(commitTargetName, {
           key: this.dataId,

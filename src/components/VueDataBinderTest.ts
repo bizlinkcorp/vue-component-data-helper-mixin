@@ -85,22 +85,23 @@ export default defineComponent({
       return this.dataBindInfo as DataBinderInfo;
     },
     currentPath() {
-      return (this.parentInfo.path ? `${this.parentInfo.path}.` : '') + this.path;
+      return (this.inherit ? (this.parentInfo.path ? `${this.parentInfo.path}.` : '') : '') + this.path;
     },
     currentModule() {
-      return this.module ?? this.parentInfo.module;
+      return this.module ?? (this.inherit ? this.parentInfo.module : undefined);
     },
     currentViewStateKey() {
-      return this.viewStateKey ?? this.parentInfo.viewStateKey;
+      return this.viewStateKey ?? (this.inherit ? this.parentInfo.viewStateKey : undefined);
     },
     currentDataKey() {
-      return this.dataKey ?? this.parentInfo.dataKey;
+      return this.dataKey ?? (this.inherit ? this.parentInfo.dataKey : undefined);
     },
     currentViewState(): ItemViewState {
       return {
         // 設定優先順位： 自ViewState > 親ViewState
         // disabled プロパティ
-        disabled: this.currentStoreViewState?.disabled ?? this.parentStoreViewState?.disabled,
+        disabled:
+          this.currentStoreViewState?.disabled ?? (this.inherit ? this.parentStoreViewState?.disabled : undefined),
         // TODO 他の状態があればここを修正する
       };
     },

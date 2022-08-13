@@ -60,20 +60,20 @@
         <a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a>
       </li>
     </ul>
-    <vue-data-binder-test view-state-key="viewState" path="aaaa">
-      <vue-data-binder-test path="bbbb">
-        <vue-data-binder-test path="cccc">
+    <vue-data-binder-test view-state-key="viewState" path="aaaa" inherit>
+      <vue-data-binder-test path="bbbb" inherit>
+        <vue-data-binder-test path="cccc" inherit>
           <vue-data-reciever-test item-id="id1" />
           <vue-data-reciever-test item-id="id2" />
         </vue-data-binder-test>
       </vue-data-binder-test>
     </vue-data-binder-test>
-    <vue-data-binder-test module="moduleTest" view-state-key="viewState" path="aaaa">
-      <vue-data-binder-test path="xxxx">
-        <vue-data-binder-test path="yyyy">
+    <vue-data-binder-test module="moduleTest" view-state-key="viewState" path="aaaa" inherit>
+      <vue-data-binder-test path="xxxx" inherit>
+        <vue-data-binder-test path="yyyy" inherit>
           <vue-data-reciever-test item-id="ida" />
         </vue-data-binder-test>
-        <vue-data-binder-test path="zzzz">
+        <vue-data-binder-test path="zzzz" inherit>
           <vue-data-reciever-test item-id="idb" />
         </vue-data-binder-test>
       </vue-data-binder-test>

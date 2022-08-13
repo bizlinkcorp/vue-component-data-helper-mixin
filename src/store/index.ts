@@ -7,9 +7,7 @@ export interface ItemViewState {
   disabled?: boolean;
 }
 
-export type ViewStateTree =
-  | { [itemIdOrLayer: string]: ItemViewState | ViewStateTree }
-  | ItemViewState;
+export type ViewStateTree = { [itemIdOrLayer: string]: ItemViewState | ViewStateTree } | ItemViewState;
 
 export interface StateSetPayload<T> {
   key: string;
@@ -18,12 +16,7 @@ export interface StateSetPayload<T> {
 
 // TODO このメソッドを export する。
 const setStoreState = <T>(state: any, payload: StateSetPayload<T>): void => {
-  const innerStateSetFn = (
-    value: T,
-    parentState: any,
-    keys: string[],
-    idx = 0
-  ): void => {
+  const innerStateSetFn = (value: T, parentState: any, keys: string[], idx = 0): void => {
     if (keys.length - 1 === idx) {
       // https://v2.vuejs.org/v2/guide/reactivity.html#For-Objects
       Vue.set(parentState, keys[idx], value);

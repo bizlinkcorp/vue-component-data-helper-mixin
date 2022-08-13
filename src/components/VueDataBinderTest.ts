@@ -47,7 +47,6 @@ export default defineComponent({
       },
     };
 
-    console.log(parentDataBindInfo);
     return {
       parentDataBindInfo,
     };
@@ -73,12 +72,18 @@ export default defineComponent({
       required: false,
       default: undefined,
     },
+    inherit: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   computed: {
+    parentInfo() {
+      return this.dataBindInfo as DataBinderInfo;
+    },
     currentPath() {
-      const info = this.dataBindInfo as DataBinderInfo;
-      console.log((info.path ? `${info.path}.` : '') + this.path);
-      return (info.path ? `${info.path}.` : '') + this.path;
+      return (this.parentInfo.path ? `${this.parentInfo.path}.` : '') + this.path;
     },
     currentModule() {
       const info = this.dataBindInfo as DataBinderInfo;
@@ -98,29 +103,18 @@ export default defineComponent({
       return {
         // プロパティ優先順位： 自プロパティ > 親プロパティ > デフォルト
         // disabled プロパティ
-        disabled:
-          currentViewState?.disabled ?? info.viewState?.disabled ?? false,
+        disabled: currentViewState?.disabled ?? info.viewState?.disabled ?? false,
         // TODO 他の状態があればここを修正する
       };
     },
     viewStatePath() {
-      return (
-        (this.currentViewStateKey ? `${this.currentViewStateKey}.` : '') +
-        this.currentPath
-      );
+      return (this.currentViewStateKey ? `${this.currentViewStateKey}.` : '') + this.currentPath;
     },
     moduledViewStatePath() {
-      return (
-        (this.currentModule ? `${this.currentModule}.` : '') +
-        this.viewStatePath
-      );
+      return (this.currentModule ? `${this.currentModule}.` : '') + this.viewStatePath;
     },
     storeViewState() {
-      console.log(this.moduledViewStatePath);
-      return this.getStoreValue(
-        this.$store.state,
-        this.moduledViewStatePath.split('.')
-      );
+      return this.getStoreValue(this.$store.state, this.moduledViewStatePath.split('.'));
     },
   },
 });

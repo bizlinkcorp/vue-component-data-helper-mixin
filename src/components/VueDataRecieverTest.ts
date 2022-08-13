@@ -21,11 +21,7 @@ export default defineComponent({
   computed: {
     dataId() {
       const info = this.dataBindInfo as DataBinderInfo;
-      return (
-        (info.dataKey ? `${info.dataKey}.` : '') +
-        (info.path ? `${info.path}.` : '') +
-        this.itemId
-      );
+      return (info.dataKey ? `${info.dataKey}.` : '') + (info.path ? `${info.path}.` : '') + this.itemId;
     },
     moduledDataId() {
       const info = this.dataBindInfo as DataBinderInfo;
@@ -34,11 +30,7 @@ export default defineComponent({
     },
     viewStateId() {
       const info = this.dataBindInfo as DataBinderInfo;
-      return (
-        (info.viewStateKey ? `${info.viewStateKey}.` : '') +
-        (info.path ? `${info.path}.` : '') +
-        this.itemId
-      );
+      return (info.viewStateKey ? `${info.viewStateKey}.` : '') + (info.path ? `${info.path}.` : '') + this.itemId;
     },
     moduledViewStateId() {
       const info = this.dataBindInfo as DataBinderInfo;
@@ -46,15 +38,11 @@ export default defineComponent({
     },
     storeData: {
       get() {
-        return this.getStoreValue(
-          this.$store.state,
-          this.moduledDataId.split('.')
-        );
+        return this.getStoreValue(this.$store.state, this.moduledDataId.split('.'));
       },
       set(newVal: any) {
         const info = this.dataBindInfo as DataBinderInfo;
-        const commitTargetName =
-          (info.module ? `${info.module}/` : '') + 'setStoreState';
+        const commitTargetName = (info.module ? `${info.module}/` : '') + 'setStoreState';
         this.$store.commit(commitTargetName, {
           key: this.dataId,
           value: newVal,
@@ -63,10 +51,7 @@ export default defineComponent({
     },
     storeViewState(): ItemViewState {
       // プロパティ優先順位： 自プロパティ > 親プロパティ > デフォルト
-      const itemViewState = this.getStoreValue(
-        this.$store.state,
-        this.moduledViewStateId.split('.')
-      ) as ItemViewState;
+      const itemViewState = this.getStoreValue(this.$store.state, this.moduledViewStateId.split('.')) as ItemViewState;
       const info = this.dataBindInfo as DataBinderInfo;
       return {
         disabled: itemViewState?.disabled ?? info.viewState?.disabled ?? false,

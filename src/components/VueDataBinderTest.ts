@@ -4,50 +4,52 @@ import { ItemViewState } from '../store/index';
 
 // FIXME オブジェクトに変更する
 export interface DataBinderInfo {
-  path?: string;
-  module?: string;
-  viewStateKey: string;
-  dataKey?: string;
-  viewState: ItemViewState;
+  readonly path?: string;
+  readonly module?: string;
+  readonly viewStateKey: string;
+  readonly dataKey?: string;
+  readonly viewState: ItemViewState;
 }
 
 // FIXME viewStateKey | dataKey はplugin利用時に決定する方が良い。
-// FIXME module はルート状態のみ設定できるようにしたほうが良い。
 
 export default defineComponent({
   name: 'VueDataBinderTest',
   mixins: [StoreValueMethodMixins],
   inject: {
-    bindPath: {
-      from: 'parentPath',
-      default: undefined,
-    },
-    bindModule: {
-      from: 'parentModule',
-      default: undefined,
-    },
-    bindViewStateKey: {
-      from: 'parentViewStateKey',
-      default: undefined,
-    },
-    bindDataKey: {
-      from: 'parentDataKey',
-      default: undefined,
-    },
-    bindViewState: {
-      from: 'parentViewState',
+    dataBindInfo: {
+      from: 'parentDataBindInfo',
       default: () => ({}),
     },
   },
   provide() {
-    // FIXME このままだとリアクティブに変更されないので、計算取得できるように変更すること。
-    console.log(this.currentPath, this.currentModule, this.currentViewStateKey);
+    const path = () => this.currentPath;
+    const module = () => this.currentModule;
+    const viewStateKey = () => this.currentViewStateKey;
+    const dataKey = () => this.dataKey;
+    const viewState = () => this.currentViewState;
+
+    const parentDataBindInfo: DataBinderInfo = {
+      get path() {
+        return path();
+      },
+      get module() {
+        return module();
+      },
+      get viewStateKey() {
+        return viewStateKey();
+      },
+      get dataKey() {
+        return dataKey();
+      },
+      get viewState() {
+        return viewState();
+      },
+    };
+
+    console.log(parentDataBindInfo);
     return {
-      parentPath: this.currentPath,
-      parentModule: this.currentModule,
-      parentViewStateKey: this.currentViewStateKey,
-      parentDataKey: this.currentDataKey,
-      parentViewState: this.currentViewState,
+      parentDataBindInfo,
     };
   },
   props: {
@@ -74,25 +76,30 @@ export default defineComponent({
   },
   computed: {
     currentPath() {
-      return (this.bindPath ? `${this.bindPath}.` : '') + this.path;
+      const info = this.dataBindInfo as DataBinderInfo;
+      console.log((info.path ? `${info.path}.` : '') + this.path);
+      return (info.path ? `${info.path}.` : '') + this.path;
     },
     currentModule() {
-      return this.module ?? this.bindModule;
+      const info = this.dataBindInfo as DataBinderInfo;
+      return this.module ?? info.module;
     },
     currentViewStateKey() {
-      return this.viewStateKey ?? this.bindViewStateKey;
+      const info = this.dataBindInfo as DataBinderInfo;
+      return this.viewStateKey ?? info.viewStateKey;
     },
     currentDataKey() {
-      return this.dataKey ?? this.bindDataKey;
+      const info = this.dataBindInfo as DataBinderInfo;
+      return this.dataKey ?? info.dataKey;
     },
     currentViewState(): ItemViewState {
+      const info = this.dataBindInfo as DataBinderInfo;
       const currentViewState = this.storeViewState as ItemViewState;
-      const bindViewState = this.bindViewState as ItemViewState;
       return {
         // プロパティ優先順位： 自プロパティ > 親プロパティ > デフォルト
         // disabled プロパティ
         disabled:
-          currentViewState?.disabled ?? bindViewState?.disabled ?? false,
+          currentViewState?.disabled ?? info.viewState?.disabled ?? false,
         // TODO 他の状態があればここを修正する
       };
     },

@@ -82,6 +82,9 @@ export default new Vuex.Store({
             },
           },
         },
+        viewState: {
+          disabled: true,
+        } as ViewStateTree,
       },
       mutations: {
         setStoreState,

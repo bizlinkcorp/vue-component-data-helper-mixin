@@ -1,29 +1,14 @@
 import { defineComponent } from 'vue';
 import StoreValueMethodMixins from './StoreValueMethodMixins';
 import { ItemViewState } from '../store/index';
+import { DataBinderInfo } from './VueDataBinderTest';
 
 export default defineComponent({
   name: 'VueDataRecieverTest',
   mixins: [StoreValueMethodMixins],
   inject: {
-    path: {
-      from: 'parentPath',
-      default: undefined,
-    },
-    module: {
-      from: 'parentModule',
-      default: undefined,
-    },
-    viewStateKey: {
-      from: 'parentViewStateKey',
-      default: undefined,
-    },
-    dataKey: {
-      from: 'parentDataKey',
-      default: undefined,
-    },
-    parentViewState: {
-      from: 'parentViewState',
+    dataBindInfo: {
+      from: 'parentDataBindInfo',
       default: () => ({}),
     },
   },
@@ -35,24 +20,29 @@ export default defineComponent({
   },
   computed: {
     dataId() {
+      const info = this.dataBindInfo as DataBinderInfo;
       return (
-        (this.dataKey ? `${this.dataKey}.` : '') +
-        (this.path ? `${this.path}.` : '') +
+        (info.dataKey ? `${info.dataKey}.` : '') +
+        (info.path ? `${info.path}.` : '') +
         this.itemId
       );
     },
     moduledDataId() {
-      return (this.module ? `${this.module}.` : '') + this.dataId;
+      const info = this.dataBindInfo as DataBinderInfo;
+      console.log(this.dataId);
+      return (info.module ? `${info.module}.` : '') + this.dataId;
     },
     viewStateId() {
+      const info = this.dataBindInfo as DataBinderInfo;
       return (
-        (this.viewStateKey ? `${this.viewStateKey}.` : '') +
-        (this.path ? `${this.path}.` : '') +
+        (info.viewStateKey ? `${info.viewStateKey}.` : '') +
+        (info.path ? `${info.path}.` : '') +
         this.itemId
       );
     },
     moduledViewStateId() {
-      return (this.module ? `${this.module}.` : '') + this.viewStateId;
+      const info = this.dataBindInfo as DataBinderInfo;
+      return (info.module ? `${info.module}.` : '') + this.viewStateId;
     },
     storeData: {
       get() {
@@ -62,8 +52,9 @@ export default defineComponent({
         );
       },
       set(newVal: any) {
+        const info = this.dataBindInfo as DataBinderInfo;
         const commitTargetName =
-          (this.module ? `${this.module}/` : '') + 'setStoreState';
+          (info.module ? `${info.module}/` : '') + 'setStoreState';
         this.$store.commit(commitTargetName, {
           key: this.dataId,
           value: newVal,
@@ -76,9 +67,9 @@ export default defineComponent({
         this.$store.state,
         this.moduledViewStateId.split('.')
       ) as ItemViewState;
-      const parentViewState = this.parentViewState as ItemViewState;
+      const info = this.dataBindInfo as DataBinderInfo;
       return {
-        disabled: itemViewState?.disabled ?? parentViewState?.disabled ?? false,
+        disabled: itemViewState?.disabled ?? info.viewState?.disabled ?? false,
       };
     },
   },

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { plugin, ViewStateTree, setStoreState } from './export';
+import { ViewStateTree, setStoreState } from './export';
 
 Vue.use(Vuex);
 

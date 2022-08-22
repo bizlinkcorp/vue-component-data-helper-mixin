@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/types/"
+  },
+  "files": ["src/main-lib.type.ts"],
+  "include": ["src/shims-*.d.ts"],
+  "exclude": ["node_modules"]
+}

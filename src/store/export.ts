@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Store } from 'vuex';
+
 export interface ItemViewState {
   disabled?: boolean;
 }
@@ -30,10 +30,4 @@ export const setStoreState = <T>(state: any, payload: StateSetPayload<T>): void 
 
   const keyArr = payload.key.split('.');
   innerStateSetFn(payload.value, state, keyArr);
-};
-
-export const plugin = (store: any) => {
-  console.log(store);
-  Vue.set(store._mutations, 'setStoreState', setStoreState);
-  console.log(store);
 };

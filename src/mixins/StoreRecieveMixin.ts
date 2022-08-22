@@ -1,8 +1,8 @@
 import { defineComponent } from 'vue';
 import StoreValueMethodMixins from './StoreValueMethodMixin';
-import { ItemViewState } from '../store/index';
 import { DataBinderInfo, PROVIDE_DATA_BIND_INFO_NAME } from './StoreBindMixin';
 import { EMPTY_OBJECT } from '../const/share';
+import { ItemViewState } from '../store/export';
 
 const EMPTY_DATA_BIND_INFO = EMPTY_OBJECT;
 
@@ -42,20 +42,23 @@ export default defineComponent({
     },
     storeData: {
       get() {
-        return this.getStoreValue(this.$store.state, this.moduledDataId.split('.'));
+        return this.getStoreValue((this.$store as any).state, this.moduledDataId.split('.'));
       },
       set(newVal: any) {
         // FIXME store mutation メソッド名がリテラル
-        const commitTargetName = (this.parentInfo.module ? `${this.parentInfo.module}/` : '') + 'setStoreState';
-        this.$store.commit(commitTargetName, {
-          key: this.dataId,
+        const commitTargetName = 'setStoreState';
+        (this.$store as any).commit(commitTargetName, {
+          key: this.moduledDataId,
           value: newVal,
         });
       },
     },
     storeViewState(): ItemViewState {
       // 設定優先順位： 自ViewState > 親ViewState > デフォルト
-      const itemViewState = this.getStoreValue(this.$store.state, this.moduledViewStateId.split('.')) as ItemViewState;
+      const itemViewState = this.getStoreValue(
+        (this.$store as any).state,
+        this.moduledViewStateId.split('.'),
+      ) as ItemViewState;
       return {
         disabled: itemViewState?.disabled ?? this.parentInfo.viewState?.disabled ?? false,
       };

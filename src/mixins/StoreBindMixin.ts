@@ -1,7 +1,7 @@
 import { defineComponent } from 'vue';
 import StoreValueMethodMixins from './StoreValueMethodMixin';
-import { ItemViewState } from '../store/index';
 import { EMPTY_OBJECT } from '../const/share';
+import { ItemViewState } from '../store/export';
 
 /** provide情報キー */
 export const PROVIDE_DATA_BIND_INFO_NAME = 'parentDataBindInfo';
@@ -142,12 +142,15 @@ export default defineComponent({
       );
     },
     currentStoreViewState(): ItemViewState {
-      return this.getStoreValue(this.$store.state, this.currentViewStatePath.split('.'));
+      return this.getStoreValue((this.$store as any).state, this.currentViewStatePath.split('.'));
     },
     parentStoreViewState(): ItemViewState {
       if (this.isRootDataBinder) {
         // 自身がrootの場合は store から直接取得する。
-        const parentStore = this.getStoreValue(this.$store.state, this.rootViewStatePath.split('.')) as ItemViewState;
+        const parentStore = this.getStoreValue(
+          (this.$store as any).state,
+          this.rootViewStatePath.split('.'),
+        ) as ItemViewState;
         return { disabled: parentStore?.disabled };
       }
       return { disabled: this.parentInfo.viewState?.disabled };

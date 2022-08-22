@@ -38,6 +38,7 @@ const setStoreState = <T>(state: any, payload: StateSetPayload<T>): void => {
 export default new Vuex.Store({
   // FIXME 実装確認用の確認ステート設定。後で削除する。
   state: {
+    viewStateName: 'viewState',
     aaaa: {
       bbbb: {
         cccc: {
@@ -57,6 +58,9 @@ export default new Vuex.Store({
           },
         },
       },
+    },
+    viewState2: {
+      disabled: false,
     },
   },
   getters: {},

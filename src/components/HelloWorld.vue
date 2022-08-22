@@ -1,7 +1,11 @@
 <template>
   <div class="hello">
+    <vue-data-binder-test path="">
+      viewState, viewState2にステート値が設定されている
+      <vue-data-reciever-test item-id="viewStateName" />
+    </vue-data-binder-test>
     <!-- ルート位置 -->
-    <vue-data-binder-test view-state-key="viewState" path="aaaa.bbbb">
+    <vue-data-binder-test :view-state-key="viewStateName" path="aaaa.bbbb">
       <vue-data-binder-test path="cccc" inherit>
         <vue-data-reciever-test item-id="id1" />
         <vue-data-reciever-test item-id="id2" />
@@ -20,11 +24,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import VueDataBinderTest from './VueDataBinderTest.vue';
 import VueDataRecieverTest from './VueDataRecieverTest.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'HelloWorld',
   components: {
     VueDataBinderTest,
@@ -32,6 +36,11 @@ export default Vue.extend({
   },
   props: {
     msg: String,
+  },
+  computed: {
+    viewStateName(): string {
+      return this.$store.state.viewStateName;
+    },
   },
 });
 </script>

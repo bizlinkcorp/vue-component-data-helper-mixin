@@ -1,4 +1,3 @@
-import { DataBinderInfo } from './VueDataBinderTest';
 export default {
   methods: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

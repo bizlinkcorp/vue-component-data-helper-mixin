@@ -6,12 +6,14 @@
     </vue-data-binder-test>
     <!-- ルート位置 -->
     <vue-data-binder-test :view-state-key="viewStateName" path="aaaa.bbbb">
-      <vue-data-binder-test path="cccc" inherit>
+      <store-path path="cccc" inherit hoge huga>
+        <!-- <vue-data-binder-test path="cccc" inherit> -->
         <vue-data-reciever-test item-id="id1" />
         <vue-data-reciever-test item-id="id2" />
-      </vue-data-binder-test>
+        <!-- </vue-data-binder-test> -->
+      </store-path>
       <!-- moduleTest から読み込むルート位置 -->
-      <vue-data-binder-test view-state-key="viewState" path="moduleTest:aaaa.xxxx">
+      <vue-data-binder-test :view-state-key="viewStateName" path="moduleTest:aaaa.xxxx">
         <vue-data-binder-test path="yyyy" inherit>
           <vue-data-reciever-test item-id="ida" />
         </vue-data-binder-test>
@@ -27,12 +29,14 @@
 import { defineComponent } from 'vue';
 import VueDataBinderTest from './VueDataBinderTest.vue';
 import VueDataRecieverTest from './VueDataRecieverTest.vue';
+import StorePath from './StorePath';
 
 export default defineComponent({
   name: 'HelloWorld',
   components: {
     VueDataBinderTest,
     VueDataRecieverTest,
+    StorePath,
   },
   props: {
     msg: String,

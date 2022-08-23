@@ -1,7 +1,7 @@
 import { defineComponent } from 'vue';
-import StoreRecieveMixin from '@/mixins/StoreRecieveMixin';
+import StoreBindMixin from '@/mixins/StoreBindMixin';
 
 export default defineComponent({
   name: 'VueDataRecieverTest',
-  mixins: [StoreRecieveMixin],
+  mixins: [StoreBindMixin],
 });

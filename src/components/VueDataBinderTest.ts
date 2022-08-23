@@ -1,7 +1,7 @@
 import { defineComponent } from 'vue';
-import StoreBindMixin from '@/mixins/StoreBindMixin';
+import StorePathMixin from '@/mixins/StorePathMixin';
 
 export default defineComponent({
   name: 'VueDataBinderTest',
-  mixins: [StoreBindMixin],
+  mixins: [StorePathMixin],
 });

@@ -38,7 +38,7 @@ export default defineComponent({
     const pathFn = () => this.currentPath;
     const moduleFn = () => this.currentModule;
     const viewStateKeyFn = () => this.currentViewStateKey;
-    const dataKeyFn = () => this.dataKey;
+    const dataKeyFn = () => this.currentDataKey;
     const viewStateFn = () => this.currentViewState;
 
     return {

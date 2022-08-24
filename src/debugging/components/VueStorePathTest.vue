@@ -3,4 +3,4 @@
     <slot />
   </div>
 </template>
-<script lang="ts" src="./VueDataBinderTest.ts" />
+<script lang="ts" src="./VueStorePathTest.ts" />

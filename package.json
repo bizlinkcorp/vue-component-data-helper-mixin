@@ -5,7 +5,7 @@
   "typings": "dist/types/main-lib.type.d.ts",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve src/debugging/main.ts",
     "build": "vue-cli-service build",
     "build:lib": "vue-cli-service build --target lib src/main-lib.ts",
     "build:type": "tsc --emitDeclarationOnly --declaration -P tsconfig.types.json",

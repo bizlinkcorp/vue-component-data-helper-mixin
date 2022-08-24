@@ -7,4 +7,4 @@
     </div>
   </div>
 </template>
-<script lang="ts" src="./VueDataRecieverTest.ts" />
+<script lang="ts" src="./VueStoreBinderTest.ts" />

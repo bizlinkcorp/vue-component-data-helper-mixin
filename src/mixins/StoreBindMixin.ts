@@ -58,6 +58,7 @@ export default defineComponent({
       const itemViewState = this.getStoreValue(this.$store.state, this.moduledViewStateId.split('.')) as ItemViewState;
       return {
         disabled: itemViewState?.disabled ?? this.parentInfo.viewState?.disabled ?? false,
+        readonly: itemViewState?.readonly ?? this.parentInfo.viewState?.readonly ?? false,
       };
     },
   },

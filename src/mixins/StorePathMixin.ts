@@ -35,10 +35,10 @@ export default defineComponent({
     },
   },
   provide() {
-    const pathFn = () => this.currentPath;
-    const moduleFn = () => this.currentModule;
-    const viewStateKeyFn = () => this.currentViewStateKey;
-    const dataKeyFn = () => this.currentDataKey;
+    const pathFn = (): string => this.currentPath;
+    const moduleFn = (): string | undefined => this.currentModule;
+    const viewStateKeyFn = (): string => this.currentViewStateKey;
+    const dataKeyFn = (): string => this.currentDataKey;
     const viewStateFn = () => this.currentViewState;
 
     return {
@@ -125,6 +125,8 @@ export default defineComponent({
         // 設定優先順位： 自ViewState > 親ViewState
         // disabled プロパティ
         disabled: this.currentStoreViewState?.disabled ?? this.parentStoreViewState?.disabled,
+        // readonly プロパティ
+        readonly: this.currentStoreViewState?.readonly ?? this.parentStoreViewState?.readonly,
       };
     },
     rootViewStatePath() {
@@ -148,9 +150,12 @@ export default defineComponent({
       if (this.isRootDataBinder) {
         // 自身がrootの場合は store から直接取得する。
         const parentStore = this.getStoreValue(this.$store.state, this.rootViewStatePath.split('.')) as ItemViewState;
-        return { disabled: parentStore?.disabled };
+        return { disabled: parentStore?.disabled, readonly: parentStore?.readonly };
       }
-      return { disabled: this.parentInfo.viewState?.disabled };
+      return {
+        disabled: this.parentInfo.viewState?.disabled,
+        readonly: this.parentInfo.viewState?.readonly,
+      };
     },
   },
 });

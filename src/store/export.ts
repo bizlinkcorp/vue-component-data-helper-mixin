@@ -2,15 +2,25 @@ import Vue from 'vue';
 
 export interface ItemViewState {
   disabled?: boolean;
+  readonly?: boolean;
 }
 
 export type ViewStateTree = { [itemIdOrLayer: string]: ItemViewState | ViewStateTree } | ItemViewState;
 
+/**
+ * ストア設定ペイロード
+ * @see {@link setStoreState}
+ */
 export interface StateSetPayload<T> {
   key: string;
   value: T;
 }
 
+/**
+ *
+ * @param state 設定対象のstateオブジェクト
+ * @param payload パラメータ
+ */
 export const setStoreState = <T>(state: unknown, payload: StateSetPayload<T>): void => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const innerStateSetFn = (value: T, parentState: any, keys: string[], idx = 0): void => {

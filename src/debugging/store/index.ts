@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import type { ViewStateTree } from './StoreViewState';
-import { setStoreState } from './StoreControl';
+import type { ViewStateTree } from '../../store/StoreViewState';
+import { setStoreState } from '../../store/StoreControl';
 
 Vue.use(Vuex);
 

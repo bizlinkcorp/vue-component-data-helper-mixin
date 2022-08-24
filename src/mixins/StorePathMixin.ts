@@ -142,15 +142,12 @@ export default defineComponent({
       );
     },
     currentStoreViewState(): ItemViewState {
-      return this.getStoreValue((this.$store as any).state, this.currentViewStatePath.split('.'));
+      return this.getStoreValue(this.$store.state, this.currentViewStatePath.split('.'));
     },
     parentStoreViewState(): ItemViewState {
       if (this.isRootDataBinder) {
         // 自身がrootの場合は store から直接取得する。
-        const parentStore = this.getStoreValue(
-          (this.$store as any).state,
-          this.rootViewStatePath.split('.'),
-        ) as ItemViewState;
+        const parentStore = this.getStoreValue(this.$store.state, this.rootViewStatePath.split('.')) as ItemViewState;
         return { disabled: parentStore?.disabled };
       }
       return { disabled: this.parentInfo.viewState?.disabled };

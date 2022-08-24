@@ -5,6 +5,10 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [vue(), tsconfigPaths()],
+  publicDir: false,
+  // css: {
+  //   devSourcemap: false,
+  // },
   build: {
     lib: {
       entry: './src/vue-data-binder.ts',

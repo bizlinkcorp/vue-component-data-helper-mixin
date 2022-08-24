@@ -164,8 +164,8 @@ export default defineComponent({
       return this.dataKey ?? this.parentInfo.dataKey;
     },
     currentViewState(): ItemViewState {
-      const current = currentStoreViewState(this as StorePathMixinComputed);
-      const parent = parentStoreViewState(this as StorePathMixinComputed);
+      const current = currentStoreViewState(this as unknown as StorePathMixinComputed);
+      const parent = parentStoreViewState(this as unknown as StorePathMixinComputed);
 
       return {
         // 設定優先順位： 自ViewState > 親ViewState

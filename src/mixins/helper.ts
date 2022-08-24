@@ -21,6 +21,7 @@ const getStoreValueInner = (parentState: any, paths: string[], idx = 0): any => 
 
 /**
  * ストア値取得
+ *
  * @example
  * ```ts
  * // store状態

@@ -59,13 +59,79 @@ const parentStoreViewState = (inst: StorePathMixinComputed): ItemViewState => {
  * store path mixin
  *
  * @remarks
- * FIXME 説明を記載する
- * - 使用方法
- * - 副作用
- * - プロパティの変遷
+ * ## 効果
+ * - Storeの使用したいデータのパスをコントロールする
+ * - path 情報は、vue 機能の provide/inject を利用し、下位コンポーネントへ伝達する
+ *
+ * ## 使用方法
+ * - パスを指定したいコンポーネントの mixin に組み込む
+ * - 組み込むことで以下のプロパティを指定することができる
+ *   - path
+ *     - データパスを定義する
+ *     - モジュール指定は ':' で先頭に記載可能。指定しない場合は root store を参照
+ *     - inherit を指定しないパスで使用すること
+ *   - viewStateKey
+ *     - 画面状態のキーを定義する
+ *   - dataKey
+ *     - データキーを定義する
+ *   - inherit
+ *     - 上位の指定を引き継ぎ判定を行うか否かを指定する。（trueの場合に引き継ぐ）
  *
  * @example
- * FIXME 使用方法を記載する
+ * ## コンポーネントへの組み込み方法
+ *
+ * ```html
+ * <template>
+ *   <div>
+ *     <!-- implements template -->
+ *   </div>
+ * </template>
+ * <script lang="ts">
+ * import { defineComponent } from 'vue';
+ * import { StorePathMixin } from 'vue-data-binder';
+ *
+ * export default defineComponent({
+ *   name: 'SomePathComponent',
+ *   mixins: [StorePathMixin], // mixins で本コンポーネントを指定する
+ *   ...
+ * })
+ * </script>
+ * ```
+ *
+ * ## コンポーネントの使用方法
+ * ```html
+ * <template>
+ *   <some-path-component
+ *     path="path.to"
+ *     view-state-key="viewStateKey.viewStateTo"
+ *     data-key="dataKey.dataTo"
+ *   >
+ *     <!-- store参照パス
+ *       viewState = Store.state.viewStateKey.viewStateTo.path.to
+ *       data = Store.state.dataKey.dataTo.path.to
+ *     -->
+ *     <some-path-component path="subPath" inherit>
+ *       <!-- store参照パス (inherit を指定したため、上位のパスを引き継ぐ)
+ *         viewState = Store.state.viewStateKey.viewStateTo.path.to.subPath
+ *         data = Store.state.dataKey.dataTo.path.to.subPath
+ *       -->
+ *       ..... StoreBindMixin を実装したコンポーネントを定義する .....
+ *     </some-path-component>
+ *     <some-path-component
+ *       path="moduleName:path.to"
+ *       view-state-key="moduelViewStateKey"
+ *       data-key="moduleDataKey"
+ *     >
+ *       <!-- store参照パス (inherit を指定しない為、上位の情報を引き継がない)
+ *         viewState = Store.state.moduleName.moduelViewStateKey.path.to
+ *         data = Store.state.moduleName.moduleDataKey.path.to
+ *       -->
+ *       ..... StoreBindMixin を実装したコンポーネントを定義する .....
+ *     </some-path-component>
+ *   </some-path-component>
+ * </template>
+ * ```
+ *
  */
 export default defineComponent({
   name: 'StorePathMixin',

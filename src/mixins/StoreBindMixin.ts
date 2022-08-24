@@ -42,12 +42,14 @@ export default defineComponent({
     },
     storeData: {
       get() {
-        return this.getStoreValue(this.$store.state, this.moduledDataId.split('.'));
+        // TODO any化？
+        return this.getStoreValue((this.$store as any).state, this.moduledDataId.split('.'));
       },
       set(newVal: unknown) {
         // FIXME store mutation メソッド名がリテラル
         const commitTargetName = 'setStoreState';
-        this.$store.commit(commitTargetName, {
+        // TODO any化？
+        (this.$store as any).commit(commitTargetName, {
           key: this.moduledDataId,
           value: newVal,
         });
@@ -55,7 +57,11 @@ export default defineComponent({
     },
     storeViewState(): ItemViewState {
       // 設定優先順位： 自ViewState > 親ViewState > デフォルト
-      const itemViewState = this.getStoreValue(this.$store.state, this.moduledViewStateId.split('.')) as ItemViewState;
+      // TODO any化？
+      const itemViewState = this.getStoreValue(
+        (this.$store as any).state,
+        this.moduledViewStateId.split('.'),
+      ) as ItemViewState;
       return {
         disabled: itemViewState?.disabled ?? this.parentInfo.viewState?.disabled ?? false,
         readonly: itemViewState?.readonly ?? this.parentInfo.viewState?.readonly ?? false,

@@ -1,17 +1,22 @@
 {
   "name": "@bizlink/vue-data-binder",
-  "version": "0.1.0",
-  "main": "dist/vue-data-binder.common.js",
-  "typings": "dist/types/main-lib.type.d.ts",
+  "version": "0.1.1",
+  "main": "dist/vue-data-binder.js",
+  "module": "dist/vue-data-binder.mjs",
+  "unpkg": "dist/vue-data-binder.umd.js",
+  "typings": "dist/types/vue-data-binder.type.d.ts",
+  "files":["dist/"],
   "private": true,
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "serve": "vue-cli-service serve src/debugging/main.ts",
     "build": "vue-cli-service build",
-    "build:lib": "vue-cli-service build --target lib src/main-lib.ts",
+    "build:lib": "vue-cli-service build --target lib src/vue-data-binder.ts",
     "build:type": "tsc --emitDeclarationOnly --declaration -P tsconfig.types.json",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "vite:serve": "vite",
+    "vite:build": "vite build"
   },
   "dependencies": {
     "core-js": "^3.8.3",
@@ -22,6 +27,7 @@
     "@types/jest": "^27.5.2",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
+    "@vitejs/plugin-vue2": "^1.1.2",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-plugin-typescript": "~5.0.0",
@@ -40,6 +46,8 @@
     "prettier": "^2.4.1",
     "ts-jest": "^27.1.5",
     "typescript": "~4.7.4",
+    "vite": "^3.0.9",
+    "vite-tsconfig-paths": "^3.5.0",
     "vue-template-compiler": "^2.6.14"
   }
 }

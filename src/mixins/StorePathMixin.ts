@@ -144,12 +144,17 @@ export default defineComponent({
       );
     },
     currentStoreViewState(): ItemViewState {
-      return this.getStoreValue(this.$store.state, this.currentViewStatePath.split('.'));
+      // TODO any化？
+      return this.getStoreValue((this.$store as any).state, this.currentViewStatePath.split('.'));
     },
     parentStoreViewState(): ItemViewState {
       if (this.isRootDataBinder) {
         // 自身がrootの場合は store から直接取得する。
-        const parentStore = this.getStoreValue(this.$store.state, this.rootViewStatePath.split('.')) as ItemViewState;
+        // TODO any化？
+        const parentStore = this.getStoreValue(
+          (this.$store as any).state,
+          this.rootViewStatePath.split('.'),
+        ) as ItemViewState;
         return { disabled: parentStore?.disabled, readonly: parentStore?.readonly };
       }
       return {

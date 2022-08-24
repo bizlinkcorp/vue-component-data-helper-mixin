@@ -1,6 +1,14 @@
+/**
+ * ストア値取得（内部用）
+ *
+ * @param parentState 親のストア値
+ * @param paths 取得パスを '.' で split した値
+ * @param idx ストア参照インデックス
+ * @returns パスの値
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getStoreValueInner = (parent: any, paths: string[], idx = 0): any => {
-  const pathValue = parent[paths[idx]];
+const getStoreValueInner = (parentState: any, paths: string[], idx = 0): any => {
+  const pathValue = parentState[paths[idx]];
   const pathValueIsUndefined = !pathValue;
 
   if (idx === paths.length - 1 || pathValueIsUndefined) {
@@ -11,12 +19,36 @@ const getStoreValueInner = (parent: any, paths: string[], idx = 0): any => {
   return getStoreValueInner(pathValue, paths, idx + 1);
 };
 
-const getStoreValue = <T = any>(parent: any, path: string): T => {
-  return getStoreValueInner(parent, path.split('.'));
+/**
+ * ストア値取得
+ * @example
+ * ```ts
+ * // store状態
+ * store.state = {
+ *   path: {
+ *     to: {
+ *       value: 'hoge',
+ *     },
+ *   },
+ * };
+ *
+ * // 実行結果
+ * getStoreValue(store, 'path') = { to: { value: 'hoge' }}
+ * getStoreValue(store, 'path.to') = { value: 'hoge' }
+ * getStoreValue(store, 'path.to.value') = 'hoge'
+ * ```
+ *
+ * @param storeState ストア state そのもの
+ * @param path state の取得パス
+ * @returns ストア state 値
+ */
+const getStoreValue = <T = any>(storeState: any, path: string): T => {
+  return getStoreValueInner(storeState, path.split('.'));
 };
 
 /**
  * パス解決
+ *
  * @remarks
  * {@link paths} 全てを `'.'` で連結した値を作成する。
  * {@link paths} の `undefined` は無視する。

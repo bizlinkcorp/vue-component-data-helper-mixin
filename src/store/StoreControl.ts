@@ -1,12 +1,5 @@
 import Vue from 'vue';
 
-export interface ItemViewState {
-  disabled?: boolean;
-  readonly?: boolean;
-}
-
-export type ViewStateTree = { [itemIdOrLayer: string]: ItemViewState | ViewStateTree } | ItemViewState;
-
 /**
  * ストア設定ペイロード
  * @see {@link setStoreState}

@@ -1,7 +1,7 @@
 import { defineComponent } from 'vue';
 import { getStoreValue, resolvePath } from './helper';
 import { EMPTY_OBJECT } from '../const/share';
-import { ItemViewState } from '../store/export';
+import { ItemViewState } from '../store/StoreViewState';
 
 /** provide情報キー */
 export const PROVIDE_DATA_BIND_INFO_NAME = 'parentDataBindInfo';
@@ -41,13 +41,11 @@ const currentViewStatePath = (inst: StorePathMixinComputed) => {
   return resolvePath(inst.currentModule, inst.currentViewStateKey, inst.currentPath);
 };
 const currentStoreViewState = (inst: StorePathMixinComputed): ItemViewState => {
-  // TODO any化？
   return getStoreValue<ItemViewState>(inst.$store.state, currentViewStatePath(inst));
 };
 const parentStoreViewState = (inst: StorePathMixinComputed): ItemViewState => {
   if (inst.isRootStorePath) {
     // 自身がrootの場合は store から直接取得する。
-    // TODO any化？
     const parentStore = getStoreValue<ItemViewState>(inst.$store.state, rootViewStatePath(inst));
     return { disabled: parentStore?.disabled, readonly: parentStore?.readonly };
   }

@@ -2,8 +2,9 @@ import { defineComponent } from 'vue';
 import { getStoreValue, resolvePath } from './helper';
 import { DataBinderInfo, PROVIDE_DATA_BIND_INFO_NAME } from './StorePathMixin';
 import { EMPTY_OBJECT } from '../const/share';
-import { ItemViewState } from '../store/export';
+import { ItemViewState } from '../store/StoreViewState';
 
+/** 空オブジェクトの固定値 */
 const EMPTY_DATA_BIND_INFO = EMPTY_OBJECT;
 
 /**

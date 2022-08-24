@@ -4,6 +4,7 @@
   "main": "dist/vue-data-binder.common.js",
   "typings": "dist/types/main-lib.type.d.ts",
   "private": true,
+  "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "serve": "vue-cli-service serve src/debugging/main.ts",
     "build": "vue-cli-service build",

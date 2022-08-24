@@ -1,8 +1,8 @@
 <template>
   <div>
     <div>
-      <p>{{ moduledDataId }} = {{ storeData }}</p>
-      <p>{{ moduledViewStateId }} = {{ storeViewState }}</p>
+      <p>{{ dataId }} = {{ storeData }}</p>
+      <p>{{ viewStateId }} = {{ storeViewState }}</p>
       <input type="text" v-model="storeData" :disabled="storeViewState.disabled" />
     </div>
   </div>

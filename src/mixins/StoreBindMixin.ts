@@ -1,14 +1,24 @@
 import { defineComponent } from 'vue';
-import StoreValueMethodMixins from './StoreValueMethodMixin';
+import { getStoreValue, resolvePath } from './helper';
 import { DataBinderInfo, PROVIDE_DATA_BIND_INFO_NAME } from './StorePathMixin';
 import { EMPTY_OBJECT } from '../const/share';
 import { ItemViewState } from '../store/export';
 
 const EMPTY_DATA_BIND_INFO = EMPTY_OBJECT;
 
+/**
+ * store value bind mixin
+ *
+ * @remarks
+ * FIXME 説明を記載する
+ * - 使用方法
+ * - プロパティ設定値
+ *
+ * @example
+ * FIXME 使用方法を記載する
+ */
 export default defineComponent({
   name: 'StoreBindMixin',
-  mixins: [StoreValueMethodMixins],
   inject: {
     dataBindInfo: {
       from: PROVIDE_DATA_BIND_INFO_NAME,
@@ -25,32 +35,23 @@ export default defineComponent({
     parentInfo() {
       return this.dataBindInfo as DataBinderInfo;
     },
-    pathItemId() {
-      return (this.parentInfo.path ? `${this.parentInfo.path}.` : '') + this.itemId;
-    },
     dataId() {
-      return (this.parentInfo.dataKey ? `${this.parentInfo.dataKey}.` : '') + this.pathItemId;
-    },
-    moduledDataId() {
-      return (this.parentInfo.module ? `${this.parentInfo.module}.` : '') + this.dataId;
+      return resolvePath(this.parentInfo.module, this.parentInfo.dataKey, this.parentInfo.path, this.itemId);
     },
     viewStateId() {
-      return (this.parentInfo.viewStateKey ? `${this.parentInfo.viewStateKey}.` : '') + this.pathItemId;
-    },
-    moduledViewStateId() {
-      return (this.parentInfo.module ? `${this.parentInfo.module}.` : '') + this.viewStateId;
+      return resolvePath(this.parentInfo.module, this.parentInfo.viewStateKey, this.parentInfo.path, this.itemId);
     },
     storeData: {
       get() {
         // TODO any化？
-        return this.getStoreValue((this.$store as any).state, this.moduledDataId.split('.'));
+        return getStoreValue((this.$store as any).state, this.dataId);
       },
       set(newVal: unknown) {
         // FIXME store mutation メソッド名がリテラル
         const commitTargetName = 'setStoreState';
         // TODO any化？
         (this.$store as any).commit(commitTargetName, {
-          key: this.moduledDataId,
+          key: this.dataId,
           value: newVal,
         });
       },
@@ -58,10 +59,7 @@ export default defineComponent({
     storeViewState(): ItemViewState {
       // 設定優先順位： 自ViewState > 親ViewState > デフォルト
       // TODO any化？
-      const itemViewState = this.getStoreValue(
-        (this.$store as any).state,
-        this.moduledViewStateId.split('.'),
-      ) as ItemViewState;
+      const itemViewState = getStoreValue<ItemViewState>((this.$store as any).state, this.viewStateId);
       return {
         disabled: itemViewState?.disabled ?? this.parentInfo.viewState?.disabled ?? false,
         readonly: itemViewState?.readonly ?? this.parentInfo.viewState?.readonly ?? false,

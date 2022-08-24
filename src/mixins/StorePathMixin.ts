@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue';
-import StoreValueMethodMixins from './StoreValueMethodMixin';
+import { getStoreValue, resolvePath } from './helper';
 import { EMPTY_OBJECT } from '../const/share';
 import { ItemViewState } from '../store/export';
 
@@ -25,9 +25,52 @@ export interface DataBinderInfo {
 /** 空のデータバインド情報 */
 const EMPTY_DATA_BIND_INFO = EMPTY_OBJECT;
 
+interface StorePathMixinComputed {
+  readonly isRootStorePath: boolean;
+  readonly parentInfo: DataBinderInfo;
+  readonly currentPath: string;
+  readonly currentModule: string;
+  readonly currentViewStateKey: string;
+  readonly $store: { state: any };
+}
+
+const rootViewStatePath = (inst: StorePathMixinComputed) => {
+  return resolvePath(inst.currentModule, inst.currentViewStateKey);
+};
+const currentViewStatePath = (inst: StorePathMixinComputed) => {
+  return resolvePath(inst.currentModule, inst.currentViewStateKey, inst.currentPath);
+};
+const currentStoreViewState = (inst: StorePathMixinComputed): ItemViewState => {
+  // TODO any化？
+  return getStoreValue<ItemViewState>(inst.$store.state, currentViewStatePath(inst));
+};
+const parentStoreViewState = (inst: StorePathMixinComputed): ItemViewState => {
+  if (inst.isRootStorePath) {
+    // 自身がrootの場合は store から直接取得する。
+    // TODO any化？
+    const parentStore = getStoreValue<ItemViewState>(inst.$store.state, rootViewStatePath(inst));
+    return { disabled: parentStore?.disabled, readonly: parentStore?.readonly };
+  }
+  return {
+    disabled: inst.parentInfo.viewState?.disabled,
+    readonly: inst.parentInfo.viewState?.readonly,
+  };
+};
+
+/**
+ * store path mixin
+ *
+ * @remarks
+ * FIXME 説明を記載する
+ * - 使用方法
+ * - 副作用
+ * - プロパティの変遷
+ *
+ * @example
+ * FIXME 使用方法を記載する
+ */
 export default defineComponent({
   name: 'StorePathMixin',
-  mixins: [StoreValueMethodMixins],
   inject: {
     dataBindInfo: {
       from: PROVIDE_DATA_BIND_INFO_NAME,
@@ -39,7 +82,7 @@ export default defineComponent({
     const moduleFn = (): string | undefined => this.currentModule;
     const viewStateKeyFn = (): string => this.currentViewStateKey;
     const dataKeyFn = (): string => this.currentDataKey;
-    const viewStateFn = () => this.currentViewState;
+    const viewStateFn = (): ItemViewState => this.currentViewState;
 
     return {
       [PROVIDE_DATA_BIND_INFO_NAME]: {
@@ -84,7 +127,7 @@ export default defineComponent({
     },
   },
   computed: {
-    isRootDataBinder() {
+    isRootStorePath() {
       return this.inherit === undefined || !this.inherit;
     },
     propPath() {
@@ -97,7 +140,7 @@ export default defineComponent({
     propPathModule() {
       const propPath = this.path ?? '';
       if (propPath.indexOf(':') >= 0) {
-        if (!this.isRootDataBinder) {
+        if (!this.isRootStorePath) {
           throw new Error(`ルートパスではないが、モジュールが設定されている ( path="${this.path}" )`);
         }
         return this.path.split(':')[0];
@@ -109,7 +152,7 @@ export default defineComponent({
       return (this.inherit ? this.dataBindInfo : EMPTY_DATA_BIND_INFO) as DataBinderInfo;
     },
     currentPath() {
-      return (this.parentInfo.path ? `${this.parentInfo.path}.` : '') + this.propPath;
+      return resolvePath(this.parentInfo.path, this.propPath);
     },
     currentModule() {
       return this.propPathModule ?? this.parentInfo.module;
@@ -121,45 +164,15 @@ export default defineComponent({
       return this.dataKey ?? this.parentInfo.dataKey;
     },
     currentViewState(): ItemViewState {
+      const current = currentStoreViewState(this as StorePathMixinComputed);
+      const parent = parentStoreViewState(this as StorePathMixinComputed);
+
       return {
         // 設定優先順位： 自ViewState > 親ViewState
         // disabled プロパティ
-        disabled: this.currentStoreViewState?.disabled ?? this.parentStoreViewState?.disabled,
+        disabled: current?.disabled ?? parent?.disabled,
         // readonly プロパティ
-        readonly: this.currentStoreViewState?.readonly ?? this.parentStoreViewState?.readonly,
-      };
-    },
-    rootViewStatePath() {
-      return (
-        (this.currentModule ?? '') +
-        (!!this.currentModule && !!this.currentViewStateKey ? '.' : '') +
-        (this.currentViewStateKey ?? '')
-      );
-    },
-    currentViewStatePath() {
-      return (
-        (this.currentModule ? `${this.currentModule}.` : '') +
-        (this.currentViewStateKey ? `${this.currentViewStateKey}.` : '') +
-        this.currentPath
-      );
-    },
-    currentStoreViewState(): ItemViewState {
-      // TODO any化？
-      return this.getStoreValue((this.$store as any).state, this.currentViewStatePath.split('.'));
-    },
-    parentStoreViewState(): ItemViewState {
-      if (this.isRootDataBinder) {
-        // 自身がrootの場合は store から直接取得する。
-        // TODO any化？
-        const parentStore = this.getStoreValue(
-          (this.$store as any).state,
-          this.rootViewStatePath.split('.'),
-        ) as ItemViewState;
-        return { disabled: parentStore?.disabled, readonly: parentStore?.readonly };
-      }
-      return {
-        disabled: this.parentInfo.viewState?.disabled,
-        readonly: this.parentInfo.viewState?.readonly,
+        readonly: current?.readonly ?? parent?.readonly,
       };
     },
   },

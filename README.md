@@ -228,3 +228,9 @@ src/App.vue
   })
 </script>
 ```
+
+## License
+
+[MIT](./LICENSE)
+
+Copyright (c) 2022 BizLink Co.,Ltd.

@@ -21,7 +21,143 @@ npm install vue-data-binder
 | 3   | [StorePath](./src/components/StorePath.ts)       | Vue Component | StorePathMixin をカスタム利用しない場合の単一コンポーネントい  |                                                               |
 | 4   | [setStoreState](./src/store/StoreControl.ts)     | method        | StoreBindMixin の storeData 設定時に設定する mutation メソッド | root store の mutation に設定する。                           |
 
+### コンポーネント補足
+
+#### StoreBindMixin
+
+- props
+  - itemId (string)
+    - 項目を一意に指定する ID
+- computed
+  - storeData (get/set)
+    - パスに一致した store の値を取得する
+    - set することで、store の値を直接書き換える
+  - storeViewState (readonly)
+    - パスに一致した store の viewState を取得する
+
+#### StorePathMixin
+
+- props
+  - path (string)
+  - dataKey (string)
+  - viewStateKey (string)
+  - inherit (boolean)
+
 ## 使用方法
+
+### Store 設定
+
+Root Store に setStoreState を設定する。
+
+```ts
+import { setStoreState } from 'vue-data-binder';
+
+export default new Vuex.Store({
+  state: () => ({
+    data: {
+      no: '1',
+      detail: '説明',
+      amount: 10000,
+    },
+    viewState: {
+      disabled: true,
+      detail: {
+        disabled: false,
+      },
+    },
+  }),
+  mutations: {
+    setStoreState,
+  },
+  modules: {
+    module1: {
+      state: () => ({
+        modData: {
+          no: '100',
+          detail: 'モジュール説明',
+          amount: 5000,
+        },
+        modViewState: {},
+      }),
+    },
+  },
+});
+```
+
+### コンポーネント定義
+
+#### StoreBindMixin を利用したコンポーネント
+
+src/path/to/TextBindComp.vue
+
+```html
+<template>
+  <input type="text" v-model="storeData" :disabled="storeViewState.disabled" :readonly="storeViewState.readonly" />
+</template>
+<script lang="ts">
+  import { defineComponent } from 'vue';
+  import { StoreBindMixin } from 'vue-data-binder';
+
+  export default defineComponent({
+    name: 'TextBindComp',
+    mixins: [StorePathMixin], // mixins で本コンポーネントを指定する
+    ...
+  })
+</script>
+```
+
+#### StorePathMixin を利用したコンポーネント
+
+src/path/to/CardTemplate.vue
+
+```html
+<template>
+  <div class="card-template">
+    <text-bind-comp item-id="no" />
+    <text-bind-comp item-id="detail" />
+    <text-bind-comp item-id="amount" />
+  </div>
+</template>
+<script lang="ts">
+  import { defineComponent } from 'vue';
+  import { StorePathMixin } from 'vue-data-binder';
+  import TextBindComp from './TextBindComp.vue';
+
+  export default defineComponent({
+    name: 'CardTemplate',
+    mixins: [StorePathMixin], // mixins で本コンポーネントを指定する
+    components: {
+      TextBindComp,
+    },
+    ...
+  })
+</script>
+```
+
+#### アプリケーション画面実装
+
+src/App.vue
+
+```html
+<template>
+  <div class="app">
+    <card-template path="card1" data-key="data" view-state-key="viewState" />
+    <card-template path="module1:card2" data-key="modData" view-state-key="modViewState" />
+  </div>
+</template>
+<script lang="ts">
+  import { defineComponent } from 'vue';
+  import CardTemplate from './path/to/CardTemplate.vue';
+
+  export default defineComponent({
+    name: 'App',
+    components: {
+      CardTemplate,
+    },
+    ...
+  })
+</script>
+```
 
 ## これより下は、デフォルト記載
 
@@ -58,3 +194,7 @@ npm run lint
 ### Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+```
+
+```

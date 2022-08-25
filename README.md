@@ -100,7 +100,7 @@ src/path/to/TextBindComp.vue
 
   export default defineComponent({
     name: 'TextBindComp',
-    mixins: [StorePathMixin], // mixins で本コンポーネントを指定する
+    mixins: [StoreBindMixin], // mixins で StoreBindMixin を指定する
     ...
   })
 </script>
@@ -125,7 +125,7 @@ src/path/to/CardTemplate.vue
 
   export default defineComponent({
     name: 'CardTemplate',
-    mixins: [StorePathMixin], // mixins で本コンポーネントを指定する
+    mixins: [StorePathMixin], // mixins で StorePathMixin を指定する
     components: {
       TextBindComp,
     },

@@ -6,54 +6,43 @@ import { setStoreState } from '../../store/StoreControl';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  // FIXME 実装確認用の確認ステート設定。後で削除する。
-  state: {
-    viewStateName: 'viewState',
-    aaaa: {
-      bbbb: {
-        cccc: {
-          id1: 'value1',
-          id2: 'value2',
-        },
+  state: () => ({
+    data: {
+      card1: {
+        no: '1',
+        detail: '説明',
+        amount: 10000,
       },
     },
     viewState: {
       disabled: true,
-      aaaa: {
-        bbbb: {
-          cccc: {
-            id1: {
-              disabled: false,
-            },
-          },
+      card1: {
+        detail: {
+          disabled: false,
         },
       },
-    },
-    viewState2: {
-      disabled: false,
-    },
-  },
-  getters: {},
+    } as ViewStateTree,
+  }),
   mutations: {
     setStoreState,
   },
-  actions: {},
   modules: {
-    moduleTest: {
-      namespaced: true,
-      state: {
-        aaaa: {
-          xxxx: {
-            yyyy: {
-              ida: 'value-a',
-            },
+    module1: {
+      state: () => ({
+        modData: {
+          card2: {
+            no: '100',
+            detail: 'モジュール説明',
+            amount: 5000,
           },
         },
-        viewState: {} as ViewStateTree,
-      },
-      mutations: {
-        // setStoreState,
-      },
+        modViewState: {
+          readonly: true,
+          card2: {
+            amount: { readonly: false },
+          },
+        } as ViewStateTree,
+      }),
     },
   },
 });

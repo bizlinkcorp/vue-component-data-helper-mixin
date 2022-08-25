@@ -1,18 +1,34 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <div class="root-store">
+      <store-path data-key="data" view-state-key="viewState">
+        <card-template path="card1" inherit />
+      </store-path>
+    </div>
+    <div class="module1-store">
+      <card-template path="module1:card2" data-key="modData" view-state-key="modViewState" />
+    </div>
+    <div>
+      <pre style="text-align: left">Store.state = ({{ allStoreState }})</pre>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import { defineComponent } from 'vue';
+import CardTemplate from './components/CardTemplate.vue';
+import StorePath from '../components/StorePath';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'App',
   components: {
-    HelloWorld,
+    CardTemplate,
+    StorePath,
+  },
+  computed: {
+    allStoreState() {
+      return JSON.stringify(this.$store.state, null, 2);
+    },
   },
 });
 </script>
@@ -22,8 +38,5 @@ export default Vue.extend({
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

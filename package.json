@@ -5,16 +5,20 @@
   "module": "dist/vue-data-binder.mjs",
   "unpkg": "dist/vue-data-binder.umd.js",
   "typings": "dist/types/vue-data-binder.type.d.ts",
-  "files":["dist/"],
+  "files": [
+    "dist/"
+  ],
   "private": true,
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {
-    "serve": "vue-cli-service serve src/debugging/main.ts",
-    "build": "vue-cli-service build",
-    "build:lib": "vue-cli-service build --target lib src/vue-data-binder.ts",
+    "serve": "vite",
+    "build:lib": "vite build",
     "build:type": "tsc --emitDeclarationOnly --declaration -P tsconfig.types.json",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
+    "cli:serve": "vue-cli-service serve src/debugging/main.ts",
+    "cli:build": "vue-cli-service build",
+    "cli:build:lib": "vue-cli-service build --target lib src/vue-data-binder.ts",
     "vite:serve": "vite",
     "vite:build": "vite build"
   },

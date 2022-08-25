@@ -1,3 +1,6 @@
+/** 空オブジェクト */
+const EMPTY_OBJECT = {};
+
 /**
  * ストア値取得（内部用）
  *
@@ -90,4 +93,4 @@ const resolvePath = (...paths: (string | undefined)[]): string => {
   return resolved.length > 0 ? resolved.substring(0, resolved.length - 1) : resolved;
 };
 
-export { getStoreValue, resolvePath };
+export { getStoreValue, resolvePath, EMPTY_OBJECT };

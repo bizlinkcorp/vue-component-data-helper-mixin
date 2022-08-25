@@ -1,6 +1,5 @@
 import { defineComponent } from 'vue';
-import { getStoreValue, resolvePath } from './helper';
-import { EMPTY_OBJECT } from '../const/share';
+import { getStoreValue, resolvePath, EMPTY_OBJECT } from './helper';
 import { ItemViewState } from '../store/StoreViewState';
 
 /** provide情報キー */

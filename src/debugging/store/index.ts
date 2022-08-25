@@ -13,6 +13,11 @@ export default new Vuex.Store({
         detail: '説明',
         amount: 10000,
       },
+      card2: {
+        no: '2',
+        detail: '説明2',
+        amount: 20000,
+      },
     },
     viewState: {
       disabled: true,
@@ -20,6 +25,9 @@ export default new Vuex.Store({
         detail: {
           disabled: false,
         },
+      },
+      card2: {
+        disabled: false,
       },
     } as ViewStateTree,
   }),
@@ -30,7 +38,7 @@ export default new Vuex.Store({
     module1: {
       state: () => ({
         modData: {
-          card2: {
+          card11: {
             no: '100',
             detail: 'モジュール説明',
             amount: 5000,
@@ -38,7 +46,7 @@ export default new Vuex.Store({
         },
         modViewState: {
           readonly: true,
-          card2: {
+          card11: {
             amount: { readonly: false },
           },
         } as ViewStateTree,

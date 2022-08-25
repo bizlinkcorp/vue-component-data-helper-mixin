@@ -14,12 +14,12 @@ npm install vue-data-binder
 
 ## 公開するライブラリ
 
-| No  | 公開名         | タイプ        | 説明                                                           | 備考                                                          |
-| --- | -------------- | ------------- | -------------------------------------------------------------- | ------------------------------------------------------------- |
-| 1   | StoreBindMixin | Vue mixin     | Store state と入力項目を結びつけるコンポーネント mixin         | 入力単一項目コンポーネントに設定することを想定                |
-| 2   | StorePathMixin | Vue mixin     | StoreBindMixin で参照する項目の Store state パスを設定する     | StoreBindMixin を束ねるコンポーネントに設定することを想定する |
-| 3   | StorePath      | Vue Component | StorePathMixin をカスタム利用しない場合の単一コンポーネントい  |                                                               |
-| 4   | setStoreState  | method        | StoreBindMixin の storeData 設定時に設定する mutation メソッド | root store の mutation に設定する。                           |
+| No  | 公開名                                           | タイプ        | 説明                                                           | 備考                                                          |
+| --- | ------------------------------------------------ | ------------- | -------------------------------------------------------------- | ------------------------------------------------------------- |
+| 1   | [StoreBindMixin](./src/mixins/StoreBindMixin.ts) | Vue mixin     | Store state と入力項目を結びつけるコンポーネント mixin         | 入力単一項目コンポーネントに設定することを想定                |
+| 2   | [StorePathMixin](./src/mixins/StorePathMixin.ts) | Vue mixin     | StoreBindMixin で参照する項目の Store state パスを設定する     | StoreBindMixin を束ねるコンポーネントに設定することを想定する |
+| 3   | [StorePath](./src/components/StorePath.ts)       | Vue Component | StorePathMixin をカスタム利用しない場合の単一コンポーネントい  |                                                               |
+| 4   | [setStoreState](./src/store/StoreControl.ts)     | method        | StoreBindMixin の storeData 設定時に設定する mutation メソッド | root store の mutation に設定する。                           |
 
 ## 使用方法
 

@@ -24,6 +24,10 @@ export interface DataBinderInfo {
 /** 空のデータバインド情報 */
 const EMPTY_DATA_BIND_INFO = EMPTY_OBJECT;
 
+/**
+ * export default しているコンポーネントの computed メソッドの定義
+ * 外部化したメソッドで、コンポーネントインスタンスの computed を参照するために定義。
+ */
 interface StorePathMixinComputed {
   readonly isRootStorePath: boolean;
   readonly parentInfo: DataBinderInfo;
@@ -33,15 +37,26 @@ interface StorePathMixinComputed {
   readonly $store: { state: any };
 }
 
-const rootViewStatePath = (inst: StorePathMixinComputed) => {
+/**
+ * viewState の root パスを取得する
+ * root パスは `${inst.currentModule}.${inst.currentViewStateKey}` とする
+ *
+ * @param inst StorePathMixin
+ * @returns viewState root パス文字列
+ */
+const rootViewStatePath = (inst: StorePathMixinComputed): string => {
   return resolvePath(inst.currentModule, inst.currentViewStateKey);
 };
-const currentViewStatePath = (inst: StorePathMixinComputed) => {
-  return resolvePath(inst.currentModule, inst.currentViewStateKey, inst.currentPath);
-};
-const currentStoreViewState = (inst: StorePathMixinComputed): ItemViewState => {
-  return getStoreValue<ItemViewState>(inst.$store.state, currentViewStatePath(inst));
-};
+
+/**
+ * 上位の viewState を取得する。
+ * 上位の情報は inject で設定された情報を使用する。
+ * 自身が root の StorePathMixin の場合は、inject 設定が無いため、root パスの viewState を取得する。
+ *
+ * @see {@link rootViewStatePath}
+ * @param inst StorePathMixin
+ * @returns 親 viewState 値
+ */
 const parentStoreViewState = (inst: StorePathMixinComputed): ItemViewState => {
   if (inst.isRootStorePath) {
     // 自身がrootの場合は store から直接取得する。
@@ -52,6 +67,27 @@ const parentStoreViewState = (inst: StorePathMixinComputed): ItemViewState => {
     disabled: inst.parentInfo.viewState?.disabled,
     readonly: inst.parentInfo.viewState?.readonly,
   };
+};
+
+/**
+ * viewState の 現在パスを取得する
+ * 現在パスは `${inst.currentModule}.${inst.currentViewStateKey}.${inst.currentPath}` とする
+ * @param inst StorePathMixin
+ * @returns viewState 現在パス文字列
+ */
+const currentViewStatePath = (inst: StorePathMixinComputed): string => {
+  return resolvePath(inst.currentModule, inst.currentViewStateKey, inst.currentPath);
+};
+
+/**
+ * 現在パスの viewState の値を取得する
+ * @see {@link currentViewStatePath}
+ * @see {@link ItemViewState}
+ * @param inst StorePathMixin
+ * @returns 現在パスの viewState 値
+ */
+const currentStoreViewState = (inst: StorePathMixinComputed): ItemViewState => {
+  return getStoreValue<ItemViewState>(inst.$store.state, currentViewStatePath(inst));
 };
 
 /**

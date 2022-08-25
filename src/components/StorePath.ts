@@ -2,14 +2,57 @@ import { CreateElement, defineComponent, VNode } from 'vue';
 import StorePathMixin from '@/mixins/StorePathMixin';
 
 /**
- * store path 設定コンポーネント
+ * store path コンポーネント
+ *
  * @remarks
- * FIXME 説明を記載する
- * - 使い方
- * - rendering 結果
+ * ## 概要
+ * - StorePathMixin を適用したコンポーネント
+ * - 本ライブラリを利用する際に、パスコンポーネントの組み込みが不要な場合に利用する
+ * - StorePathMixin の詳細は、{@link StorePathMixin} を参照
+ *
+ * ## 使用方法
+ * - StorePath をコンポーネントとして取り込む
+ *
+ * ## 描画結果
+ * - div 要素を配置する。
+ * - 属性値は引継ぎ表示する
  *
  * @example
- * FIXME 使用方法を記載する
+ * ## コンポーネント利用方法
+ *
+ * ```html
+ * <template>
+ *   <div class="comp-root">
+ *     <store-path path="path.to" view-state-key="" class="store-path">
+ *       <div class="child1"> ... </div>
+ *       <div class="child2"> ... </div>
+ *     </store-path>
+ *   </div>
+ * </template>
+ * <script lang="ts">
+ * import { defineComponent } from 'vue';
+ * import { StorePath } from 'vue-data-binder';
+ *
+ * export default defineComponent({
+ *   name: 'MyComp',
+ *   components: {
+ *     StorePath,
+ *   },
+ *   ...
+ * });
+ * </script>
+ * ```
+ *
+ * ## 描画結果
+ *
+ * ```html
+ * <div class="comp-root">
+ *   <div class="store-path"> <!-- store-path 要素は、div として描画する -->
+ *     <div class="child1"> ... </div>
+ *     <div class="child2"> ... </div>
+ *   </div>
+ * </div>
+ * ```
  */
 export default defineComponent({
   name: 'StorePath',

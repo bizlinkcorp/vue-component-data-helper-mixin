@@ -6,6 +6,13 @@
 2. StoreBindMixin.ts の storeData set 時の mutation の名称
    1. pinia では mutation は無く、action で対応する。
 
+## 概要
+
+- store 項目レベルで、画面コンポーネントにバインドする。
+- データ項目状態を定義し、画面コンポーネントで状態値を自由に利用する。
+- store state に対して、リアクティブな変更操作を提供する。
+- [LICENSE](./LICENSE)
+
 ## install
 
 ```shell
@@ -109,6 +116,7 @@ src/path/to/TextBindComp.vue
 
 ```html
 <template>
+  <!-- 例として disable, readonly 属性に設定してある。この属性値は v-if 等で描画を切り替える等自由に設定して良い -->
   <input type="text" v-model="storeData" :disabled="storeViewState.disabled" :readonly="storeViewState.readonly" />
 </template>
 <script lang="ts">
@@ -196,7 +204,7 @@ src/path/to/CardTemplate.vue
 </script>
 ```
 
-#### アプリケーション画面実装
+#### アプリケーション利用例
 
 src/App.vue
 
@@ -219,44 +227,4 @@ src/App.vue
     ...
   })
 </script>
-```
-
-## これより下は、デフォルト記載
-
-## Project setup
-
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-
-```
-npm run build
-```
-
-### Run your unit tests
-
-```
-npm run test:unit
-```
-
-### Lints and fixes files
-
-```
-npm run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-```
-
 ```

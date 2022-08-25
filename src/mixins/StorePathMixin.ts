@@ -209,12 +209,12 @@ export default defineComponent({
       required: false,
       default: undefined,
     },
-    viewStateKey: {
+    dataKey: {
       type: String,
       required: false,
       default: undefined,
     },
-    dataKey: {
+    viewStateKey: {
       type: String,
       required: false,
       default: undefined,

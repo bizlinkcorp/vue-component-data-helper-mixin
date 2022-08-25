@@ -14,26 +14,16 @@ npm install vue-data-binder
 
 ## 公開するライブラリ
 
-| No  | 公開名                                           | タイプ        | 説明                                                           | 備考                                                          |
-| --- | ------------------------------------------------ | ------------- | -------------------------------------------------------------- | ------------------------------------------------------------- |
-| 1   | [StoreBindMixin](./src/mixins/StoreBindMixin.ts) | Vue mixin     | Store state と入力項目を結びつけるコンポーネント mixin         | 入力単一項目コンポーネントに設定することを想定                |
-| 2   | [StorePathMixin](./src/mixins/StorePathMixin.ts) | Vue mixin     | StoreBindMixin で参照する項目の Store state パスを設定する     | StoreBindMixin を束ねるコンポーネントに設定することを想定する |
-| 3   | [StorePath](./src/components/StorePath.ts)       | Vue Component | StorePathMixin をカスタム利用しない場合の単一コンポーネントい  |                                                               |
-| 4   | [setStoreState](./src/store/StoreControl.ts)     | method        | StoreBindMixin の storeData 設定時に設定する mutation メソッド | root store の mutation に設定する。                           |
+|  No | 公開名                                           | タイプ        | 説明                                                           | 備考                                                          |
+| --: | ------------------------------------------------ | ------------- | -------------------------------------------------------------- | ------------------------------------------------------------- |
+|   1 | [StoreBindMixin](./src/mixins/StoreBindMixin.ts) | Vue mixin     | Store state と入力項目を結びつけるコンポーネント mixin         | 入力単一項目コンポーネントに設定することを想定                |
+|   2 | [StorePathMixin](./src/mixins/StorePathMixin.ts) | Vue mixin     | StoreBindMixin で参照する項目の Store state パスを設定する     | StoreBindMixin を束ねるコンポーネントに設定することを想定する |
+|   3 | [StorePath](./src/components/StorePath.ts)       | Vue Component | StorePathMixin をカスタム利用しない場合の単一コンポーネントい  |                                                               |
+|   4 | [setStoreState](./src/store/StoreControl.ts)     | method        | StoreBindMixin の storeData 設定時に設定する mutation メソッド | root store の mutation に設定する。                           |
 
 ### コンポーネント補足
 
 #### StoreBindMixin
-
-- props
-  - itemId (string)
-    - 項目を一意に指定する ID
-- computed
-  - storeData (get/set)
-    - パスに一致した store の値を取得する
-    - set することで、store の値を直接書き換える
-  - storeViewState (readonly)
-    - パスに一致した store の viewState を取得する
 
 #### StorePathMixin
 
@@ -47,37 +37,54 @@ npm install vue-data-binder
 
 ### Store 設定
 
-Root Store に setStoreState を設定する。
+- Root Store に setStoreState を設定する。
+- viewState に該当する state は `ViewStateTree` に一致するデータ型で定義する。
 
 ```ts
-import { setStoreState } from 'vue-data-binder';
+import { setStoreState, ViewStateTree } from 'vue-data-binder';
 
 export default new Vuex.Store({
+  // 本項以降の説明で利用する state の値を設定する。
   state: () => ({
+    // dataKey
     data: {
-      no: '1',
-      detail: '説明',
-      amount: 10000,
-    },
-    viewState: {
-      disabled: true,
-      detail: {
-        disabled: false,
+      card1: {
+        no: '1',
+        detail: '説明',
+        amount: 10000,
       },
     },
+    // viewStateKey
+    viewState: {
+      disabled: true,
+      card1: {
+        detail: {
+          disabled: false,
+        },
+      },
+    } as ViewStateTree,
   }),
   mutations: {
-    setStoreState,
+    setStoreState, // root store の mutations に setStoreState を指定する
   },
   modules: {
     module1: {
       state: () => ({
+        // dataKey
         modData: {
-          no: '100',
-          detail: 'モジュール説明',
-          amount: 5000,
+          card2: {
+            no: '100',
+            detail: 'モジュール説明',
+            amount: 5000,
+          },
         },
-        modViewState: {},
+        // viewStateKey
+        modViewState: {
+          readonly: true,
+          card2: {
+            amount: { readonly: false },
+          },
+        } as ViewStateTree,
       }),
     },
   },
@@ -86,7 +93,17 @@ export default new Vuex.Store({
 
 ### コンポーネント定義
 
-#### StoreBindMixin を利用したコンポーネント
+#### StoreBindMixin
+
+##### 解説
+
+|  No | vue type | name           | value type    | desc                                                      | remarks          |
+| --: | -------- | -------------- | ------------- | --------------------------------------------------------- | ---------------- |
+|   1 | props    | itemId         | string        | 項目を一意に指定する ID。Store 参照時のキーとして利用する |                  |
+|   2 | computed | storeData      | any           | パスに一致した store の値操作                             | 取得／設定が可能 |
+|   3 | computed | storeViewState | ItemViewState | パスに一致した store の viewState を取得                  | 読み取りのみ     |
+
+##### コンポーネント定義例
 
 src/path/to/TextBindComp.vue
 
@@ -106,7 +123,52 @@ src/path/to/TextBindComp.vue
 </script>
 ```
 
-#### StorePathMixin を利用したコンポーネント
+#### StorePathMixin
+
+##### 解説
+
+|  No | vue type | name         | value type | desc                                                                                           | remarks |
+| --: | -------- | ------------ | ---------- | ---------------------------------------------------------------------------------------------- | ------- |
+|   1 | props    | path         | string     | "." で区切られたパス。 ":" の前にモジュールを指定可能                                          |         |
+|   2 | props    | dataKey      | string     | data を定義した state パス要素                                                                 |         |
+|   3 | props    | viewStateKey | string     | viewState を定義した state パス要素                                                            |         |
+|   4 | props    | inherit      | boolean    | 上位の path, dataKey, viewStateKey を継承するか否か。true の場合継承し、false の場合継承しない |         |
+
+参考：以下のような定義の場合のパス要素継承イメージ
+
+```html
+<!--
+  store-path： StorePathMixin を適用したコンポーネントとする。
+  store-bind： StoreBindMixin を適用したコンポーネントとする。
+-->
+<store-path data-key="dataKey.data1" view-state-key="viewStateKey.case1" path="path">
+  <!-- A -->
+  <store-path path="to" inherit>
+    <!-- B -->
+    <store-bind item-id="id1" />
+      <!-- C -->
+    </store-bind>
+  </store-path>
+  <store-path path="module1:hoge" view-state-key="viewState">
+    <!-- D -->
+    <store-bind item-id="huga">
+      <!-- E -->
+    </store-bind>
+  </store-path>
+</store-path>
+```
+
+上記の設定状況の場合の、継承状況や項目設定状況
+
+|  No | type       | inherit | module  | dataKey          | viewStateKey       | path        | remarks                                                                         | data path                    | viewState path                 |
+| --: | ---------- | ------- | ------- | ---------------- | ------------------ | ----------- | ------------------------------------------------------------------------------- | ---------------------------- | ------------------------------ |
+|   A | store-path |         |         | dataKey.dataPath | viewStateKey.case1 | path        |                                                                                 | dataKey.dataPath.path        | viewStateKey.case1.path        |
+|   B | store-path | true    |         | dataKey.dataPath | viewStateKey.case1 | path.to     | dataKey, viewStateKey, path を上位から継承。自身の path は上位の値と連結        | dataKey.dataPath.path.to     | viewStateKey.case1.path.to     |
+|   C | store-bind | -       |         | dataKey.dataPath | viewStateKey.case1 | path.to.id1 | dataKey, viewStateKey, path を上位から継承。自身の itemId を 上位の path と連結 | dataKey.dataPath.path.to.id1 | viewStateKey.case1.path.to.id1 |
+|   D | store-path |         | module1 |                  | viewState          | hoge        | inherit 未指定の為、上位の情報を継承しない。本要素で指定した値のみ利用          | module1.hoge                 | module1.viewState.hoge         |
+|   E | store-bind | -       | module1 |                  | viewState          | hoge.huga   |                                                                                 | module1.hoge.huga            | module1.viewState.hoge.huga    |
+
+##### コンポーネント定義例
 
 src/path/to/CardTemplate.vue
 

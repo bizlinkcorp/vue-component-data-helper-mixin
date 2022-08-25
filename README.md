@@ -5,6 +5,7 @@
 1. store の定義方法を決定する
 2. StoreBindMixin.ts の storeData set 時の mutation の名称
    1. pinia では mutation は無く、action で対応する。
+3. 本ファイルは、README.ja.md とし、英語とする？
 
 ## 概要
 

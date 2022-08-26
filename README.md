@@ -12,7 +12,6 @@
 - store 項目レベルで、画面コンポーネントにバインドする。
 - データ項目状態を定義し、画面コンポーネントで状態値を自由に利用する。
 - store state に対して、リアクティブな変更操作を提供する。
-- [LICENSE](./LICENSE)
 
 ## install
 
@@ -29,24 +28,19 @@ npm install vue-data-binder
 |   3 | [StorePath](./src/components/StorePath.ts)       | Vue Component | StorePathMixin をカスタム利用しない場合の単一コンポーネントい  |                                                               |
 |   4 | [setStoreState](./src/store/StoreControl.ts)     | method        | StoreBindMixin の storeData 設定時に設定する mutation メソッド | root store の mutation に設定する。                           |
 
-### コンポーネント補足
-
-#### StoreBindMixin
-
-#### StorePathMixin
-
-- props
-  - path (string)
-  - dataKey (string)
-  - viewStateKey (string)
-  - inherit (boolean)
-
 ## 使用方法
 
 ### Store 設定
 
 - Root Store に setStoreState を設定する。
 - viewState に該当する state は `ViewStateTree` に一致するデータ型で定義する。
+
+#### ViewStateTree
+
+- ViewState のデータ型を定義する。最終的な設定値は利用者で決定することができる。
+- FIXME ！！！ここを踏まえて例を記載しなおす必要がある！！！
+
+#### 設定例
 
 ```ts
 import { setStoreState, ViewStateTree } from 'vue-data-binder';
@@ -137,12 +131,11 @@ src/path/to/TextBindComp.vue
 
 ##### 解説
 
-|  No | vue type | name         | value type | desc                                                                                           | remarks |
-| --: | -------- | ------------ | ---------- | ---------------------------------------------------------------------------------------------- | ------- |
-|   1 | props    | path         | string     | "." で区切られたパス。 ":" の前にモジュールを指定可能                                          |         |
-|   2 | props    | dataKey      | string     | data を定義した state パス要素                                                                 |         |
-|   3 | props    | viewStateKey | string     | viewState を定義した state パス要素                                                            |         |
-|   4 | props    | inherit      | boolean    | 上位の path, dataKey, viewStateKey を継承するか否か。true の場合継承し、false の場合継承しない |         |
+|  No | vue type | name          | value type | desc                                                                                       | remarks |
+| --: | -------- | ------------- | ---------- | ------------------------------------------------------------------------------------------ | ------- |
+|   2 | props    | dataPath      | string     | data を定義した state パス要素                                                             |         |
+|   3 | props    | viewStatePath | string     | viewState を定義した state パス要素                                                        |         |
+|   4 | props    | inherit       | boolean    | 上位の dataPath, viewStatePath を継承するか否か。true の場合継承し、false の場合継承しない |         |
 
 参考：以下のような定義の場合のパス要素継承イメージ
 
@@ -151,15 +144,15 @@ src/path/to/TextBindComp.vue
   store-path： StorePathMixin を適用したコンポーネントとする。
   store-bind： StoreBindMixin を適用したコンポーネントとする。
 -->
-<store-path data-key="dataKey.data1" view-state-key="viewStateKey.case1" path="path">
+<store-path data-path="dataKey.data1.path" view-state-path="viewStateKey.case1.path">
   <!-- A -->
-  <store-path path="to" inherit>
+  <store-path data-path="to" inherit>
     <!-- B -->
     <store-bind item-id="id1" />
       <!-- C -->
     </store-bind>
   </store-path>
-  <store-path path="module1:hoge" view-state-key="viewState">
+  <store-path data-path="module1:hoge" view-state-path="module1:viewState.hoge">
     <!-- D -->
     <store-bind item-id="huga">
       <!-- E -->
@@ -170,13 +163,13 @@ src/path/to/TextBindComp.vue
 
 上記の設定状況の場合の、継承状況や項目設定状況
 
-|  No | type       | inherit | module  | dataKey          | viewStateKey       | path        | remarks                                                                         | data path                    | viewState path                 |
-| --: | ---------- | ------- | ------- | ---------------- | ------------------ | ----------- | ------------------------------------------------------------------------------- | ---------------------------- | ------------------------------ |
-|   A | store-path |         |         | dataKey.dataPath | viewStateKey.case1 | path        |                                                                                 | dataKey.dataPath.path        | viewStateKey.case1.path        |
-|   B | store-path | true    |         | dataKey.dataPath | viewStateKey.case1 | path.to     | dataKey, viewStateKey, path を上位から継承。自身の path は上位の値と連結        | dataKey.dataPath.path.to     | viewStateKey.case1.path.to     |
-|   C | store-bind | -       |         | dataKey.dataPath | viewStateKey.case1 | path.to.id1 | dataKey, viewStateKey, path を上位から継承。自身の itemId を 上位の path と連結 | dataKey.dataPath.path.to.id1 | viewStateKey.case1.path.to.id1 |
-|   D | store-path |         | module1 |                  | viewState          | hoge        | inherit 未指定の為、上位の情報を継承しない。本要素で指定した値のみ利用          | module1.hoge                 | module1.viewState.hoge         |
-|   E | store-bind | -       | module1 |                  | viewState          | hoge.huga   |                                                                                 | module1.hoge.huga            | module1.viewState.hoge.huga    |
+|  No | type       | inherit | dataPath      | viewStatePath           | item-id | remarks                                                                                      | data path                    | viewState path              |
+| --: | ---------- | ------- | ------------- | ----------------------- | ------- | -------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------- |
+|   A | store-path |         | dataKey.data1 | viewStateKey.case1.path | -       |                                                                                              | dataKey.data1.path           | viewStateKey.case1.path     |
+|   B | store-path | true    | to            |                         | -       | dataPath, viewStatePath を上位から継承。自身の dataPath, viewStatePath は上位の値と連結      | dataKey.data1.path.to        | viewStateKey.case1.path     |
+|   C | store-bind | -       | -             | -                       | id1     | dataPath, viewStatePath を上位から継承。自身の itemId を 上位の (data\|viewState)Path と連結 | dataKey.dataPath.path.to.id1 | viewStateKey.case1.path.id1 |
+|   D | store-path |         | module1:hoge  | module1:viewState.hoge  | -       | inherit 未指定の為、上位の情報を継承しない。本要素で指定した値のみ利用                       | module1.hoge                 | module1.viewState.hoge      |
+|   E | store-bind | -       | -             | -                       | huga    |                                                                                              | module1.hoge.huga            | module1.viewState.hoge.huga |
 
 ##### コンポーネント定義例
 

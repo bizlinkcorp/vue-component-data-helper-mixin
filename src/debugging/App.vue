@@ -17,12 +17,12 @@
     <div>
       <h2>vue-data-binder を利用した store 利用</h2>
       <div class="root-store">
-        <store-path data-key="data" view-state-key="viewState">
-          <card-template :path="pathName" inherit />
+        <store-path data-path="data" view-state-path="viewState">
+          <card-template :data-path="pathName" :view-state-path="pathName" inherit />
         </store-path>
       </div>
       <div class="module1-store">
-        <card-template path="module1:card11" data-key="modData" view-state-key="modViewState" />
+        <card-template data-path="module1:modData.card11" view-state-path="module1:modViewState.card11" />
       </div>
       <div>
         <h3>store状態</h3>

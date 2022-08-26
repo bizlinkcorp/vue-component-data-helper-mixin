@@ -43,11 +43,11 @@ const getStoreValueInner = (parentState: any, paths: string[], idx = 0): any => 
  * ```
  *
  * @param storeState ストア state そのもの
- * @param path state の取得パス
+ * @param path state の取得パス (パス例： module:path.to)
  * @returns ストア state 値
  */
 const getStoreValue = <T = any>(storeState: any, path: string): T => {
-  return getStoreValueInner(storeState, path.split('.'));
+  return getStoreValueInner(storeState, path.split(/[:.]/));
 };
 
 /**

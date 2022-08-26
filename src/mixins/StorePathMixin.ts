@@ -9,86 +9,50 @@ export const PROVIDE_DATA_BIND_INFO_NAME = 'parentDataBindInfo';
  * データバインド情報
  */
 export interface DataBinderInfo {
-  /** パス */
-  readonly path: string;
-  /** モジュール */
-  readonly module?: string;
-  /** ViewStateキー情報 */
-  readonly viewStateKey?: string;
-  /** データキー情報 */
-  readonly dataKey?: string;
-  /** 上位ViewState設定値 */
+  /** データパス */
+  readonly dataPath?: string;
+  /** 画面状態パス */
+  readonly viewStatePath?: string;
+  // TODO これはなくす方向になるかも
+  /** 親画面状態 */
   readonly viewState: ItemViewState;
 }
 
 /** 空のデータバインド情報 */
 const EMPTY_DATA_BIND_INFO = EMPTY_OBJECT;
 
-/**
- * export default しているコンポーネントの computed メソッドの定義
- * 外部化したメソッドで、コンポーネントインスタンスの computed を参照するために定義。
- */
-interface StorePathMixinComputed {
-  readonly isRootStorePath: boolean;
-  readonly parentInfo: DataBinderInfo;
-  readonly currentPath: string;
-  readonly currentModule: string;
-  readonly currentViewStateKey: string;
-  readonly $store: { state: any };
-}
+// /**
+//  * export default しているコンポーネントの computed メソッドの定義
+//  * 外部化したメソッドで、コンポーネントインスタンスの computed を参照するために定義。
+//  */
+// interface StorePathMixinComputed {
+//   readonly parentInfo: DataBinderInfo;
+//   readonly currentDataPath: string;
+//   readonly currentViewStatePath: string;
+//   readonly $store: { state: any };
+// }
 
-/**
- * viewState の root パスを取得する
- * root パスは `${inst.currentModule}.${inst.currentViewStateKey}` とする
- *
- * @param inst StorePathMixin
- * @returns viewState root パス文字列
- */
-const rootViewStatePath = (inst: StorePathMixinComputed): string => {
-  return resolvePath(inst.currentModule, inst.currentViewStateKey);
-};
+// /**
+//  * viewState の root パスを取得する
+//  * root パスは `${inst.currentModule}.${inst.currentViewStateKey}` とする
+//  *
+//  * @param inst StorePathMixin
+//  * @returns viewState root パス文字列
+//  */
+// const rootViewStatePath = (inst: StorePathMixinComputed): string => {
+//   return resolvePath(inst.currentModule, inst.currentViewStateKey);
+// };
 
-/**
- * 上位の viewState を取得する。
- * 上位の情報は inject で設定された情報を使用する。
- * 自身が root の StorePathMixin の場合は、inject 設定が無いため、root パスの viewState を取得する。
- *
- * @see {@link rootViewStatePath}
- * @param inst StorePathMixin
- * @returns 親 viewState 値
- */
-const parentStoreViewState = (inst: StorePathMixinComputed): ItemViewState => {
-  if (inst.isRootStorePath) {
-    // 自身がrootの場合は store から直接取得する。
-    const parentStore = getStoreValue<ItemViewState>(inst.$store.state, rootViewStatePath(inst));
-    return { disabled: parentStore?.disabled, readonly: parentStore?.readonly };
-  }
-  return {
-    disabled: inst.parentInfo.viewState?.disabled,
-    readonly: inst.parentInfo.viewState?.readonly,
-  };
-};
-
-/**
- * viewState の 現在パスを取得する
- * 現在パスは `${inst.currentModule}.${inst.currentViewStateKey}.${inst.currentPath}` とする
- * @param inst StorePathMixin
- * @returns viewState 現在パス文字列
- */
-const currentViewStatePath = (inst: StorePathMixinComputed): string => {
-  return resolvePath(inst.currentModule, inst.currentViewStateKey, inst.currentPath);
-};
-
-/**
- * 現在パスの viewState の値を取得する
- * @see {@link currentViewStatePath}
- * @see {@link ItemViewState}
- * @param inst StorePathMixin
- * @returns 現在パスの viewState 値
- */
-const currentStoreViewState = (inst: StorePathMixinComputed): ItemViewState => {
-  return getStoreValue<ItemViewState>(inst.$store.state, currentViewStatePath(inst));
-};
+// /**
+//  * 現在パスの viewState の値を取得する
+//  * @see {@link currentViewStatePath}
+//  * @see {@link ItemViewState}
+//  * @param inst StorePathMixin
+//  * @returns 現在パスの viewState 値
+//  */
+// const currentStoreViewState = (inst: StorePathMixinComputed): ItemViewState => {
+//   return getStoreValue<ItemViewState>(inst.$store.state, currentViewStatePath(inst));
+// };
 
 /**
  * store path mixin
@@ -101,14 +65,12 @@ const currentStoreViewState = (inst: StorePathMixinComputed): ItemViewState => {
  * ## 使用方法
  * - パスを指定したいコンポーネントの mixin に組み込む
  * - 組み込むことで以下のプロパティを指定することができる
- *   - path
+ *   - dataPath
  *     - データパスを定義する
  *     - モジュール指定は ':' で先頭に記載可能。指定しない場合は root store を参照
  *     - inherit を指定しないパスで使用すること
- *   - viewStateKey
- *     - 画面状態のキーを定義する
- *   - dataKey
- *     - データキーを定義する
+ *   - viewStatePath
+ *     - 画面状態のパスを定義する
  *   - inherit
  *     - 上位の指定を引き継ぎ判定を行うか否かを指定する。（trueの場合に引き継ぐ）
  *
@@ -137,29 +99,27 @@ const currentStoreViewState = (inst: StorePathMixinComputed): ItemViewState => {
  * ```html
  * <template>
  *   <some-path-component
- *     path="path.to"
- *     view-state-key="viewStateKey.viewStateTo"
- *     data-key="dataKey.dataTo"
+ *     data-path="dataKey.dataTo.path.to"
+ *     view-state-path="viewStateKey.viewStateTo.path.to"
  *   >
  *     <!-- store参照パス
- *       viewState = Store.state.viewStateKey.viewStateTo.path.to
  *       data = Store.state.dataKey.dataTo.path.to
+ *       viewState = Store.state.viewStateKey.viewStateTo.path.to
  *     -->
- *     <some-path-component path="subPath" inherit>
+ *     <some-path-component data-path="subPath" view-state-pasu="subPath" inherit>
  *       <!-- store参照パス (inherit を指定したため、上位のパスを引き継ぐ)
- *         viewState = Store.state.viewStateKey.viewStateTo.path.to.subPath
  *         data = Store.state.dataKey.dataTo.path.to.subPath
+ *         viewState = Store.state.viewStateKey.viewStateTo.path.to.subPath
  *       -->
  *       ..... StoreBindMixin を実装したコンポーネントを定義する .....
  *     </some-path-component>
  *     <some-path-component
- *       path="moduleName:path.to"
- *       view-state-key="moduelViewStateKey"
- *       data-key="moduleDataKey"
+ *       data-path="moduleName:moduleDataKey.path.to"
+ *       view-state-path="moduleName:moduelViewStateKey.path.to"
  *     >
  *       <!-- store参照パス (inherit を指定しない為、上位の情報を引き継がない)
- *         viewState = Store.state.moduleName.moduelViewStateKey.path.to
  *         data = Store.state.moduleName.moduleDataKey.path.to
+ *         viewState = Store.state.moduleName.moduelViewStateKey.path.to
  *       -->
  *       ..... StoreBindMixin を実装したコンポーネントを定義する .....
  *     </some-path-component>
@@ -177,25 +137,16 @@ export default defineComponent({
     },
   },
   provide() {
-    const pathFn = (): string => this.currentPath;
-    const moduleFn = (): string | undefined => this.currentModule;
-    const viewStateKeyFn = (): string => this.currentViewStateKey;
-    const dataKeyFn = (): string => this.currentDataKey;
+    const dataPathFn = (): string => this.currentDataPath;
+    const viewStatePathFn = (): string => this.currentViewStatePath;
     const viewStateFn = (): ItemViewState => this.currentViewState;
-
     return {
       [PROVIDE_DATA_BIND_INFO_NAME]: {
-        get path() {
-          return pathFn();
+        get dataPath() {
+          return dataPathFn();
         },
-        get module() {
-          return moduleFn();
-        },
-        get viewStateKey() {
-          return viewStateKeyFn();
-        },
-        get dataKey() {
-          return dataKeyFn();
+        get viewStatePath() {
+          return viewStatePathFn();
         },
         get viewState() {
           return viewStateFn();
@@ -204,18 +155,12 @@ export default defineComponent({
     };
   },
   props: {
-    path: {
+    dataPath: {
       type: String,
       required: false,
       default: undefined,
     },
-    dataKey: {
-      type: String,
-      required: false,
-      default: undefined,
-    },
-    // FIXME path, dataKey, viewStateKey はやめる。dataPath, viewStatePath それぞれを管理する。設定が無い場合は利用しない。inherit はそのまま続ける
-    viewStateKey: {
+    viewStatePath: {
       type: String,
       required: false,
       default: undefined,
@@ -227,46 +172,48 @@ export default defineComponent({
     },
   },
   computed: {
-    isRootStorePath() {
-      return this.inherit === undefined || !this.inherit;
-    },
-    propPath() {
-      const propPath = this.path ?? '';
-      if (propPath.indexOf(':') >= 0) {
-        return this.path.split(':')[1];
-      }
-      return this.path;
-    },
-    propPathModule() {
-      const propPath = this.path ?? '';
-      if (propPath.indexOf(':') >= 0) {
-        if (!this.isRootStorePath) {
-          throw new Error(`ルートパスではないが、モジュールが設定されている ( path="${this.path}" )`);
-        }
-        return this.path.split(':')[0];
-      }
-      return undefined;
-    },
     parentInfo() {
       // 継承設定がない場合は、空の親オブジェクトを返却する
       return (this.inherit ? this.dataBindInfo : EMPTY_DATA_BIND_INFO) as DataBinderInfo;
     },
-    currentPath() {
-      return resolvePath(this.parentInfo.path, this.propPath);
+    /**
+     * 上位の viewState を取得する。
+     * 上位の情報は inject で設定された情報を使用する。
+     * 自身が root の StorePathMixin の場合は、inject 設定が無いため、root パスの viewState を取得する。
+     *
+     * @see {@link rootViewStatePath}
+     * @param inst StorePathMixin
+     * @returns 親 viewState 値
+     */
+    parentStoreViewState(): ItemViewState {
+      return this.parentInfo.viewState || EMPTY_OBJECT;
     },
-    currentModule() {
-      return this.propPathModule ?? this.parentInfo.module;
+    currentDataPath() {
+      return resolvePath(this.parentInfo.dataPath, this.dataPath);
     },
-    currentViewStateKey() {
-      return this.viewStateKey ?? this.parentInfo.viewStateKey;
+    currentViewStatePath() {
+      return resolvePath(this.parentInfo.viewStatePath, this.viewStatePath);
     },
-    currentDataKey() {
-      return this.dataKey ?? this.parentInfo.dataKey;
+    /**
+     * 現在パスの viewState の値を取得する
+     * @see {@link currentViewStatePath}
+     * @see {@link ItemViewState}
+     * @param inst StorePathMixin
+     * @returns 現在パスの viewState 値
+     */
+    currentStoreViewState(): ItemViewState {
+      return getStoreValue<ItemViewState>(this.$store.state, this.currentViewStatePath);
     },
     currentViewState(): ItemViewState {
-      const current = currentStoreViewState(this as unknown as StorePathMixinComputed);
-      const parent = parentStoreViewState(this as unknown as StorePathMixinComputed);
+      const current = this.currentStoreViewState;
+      const parent = this.parentStoreViewState;
 
+      console.log({
+        currentDataPath: this.currentDataPath,
+        currentViewStatePath: this.currentViewStatePath,
+        current,
+        parent,
+      });
       // FIXME ここの部分の実装は別途切り出して、拡張できるようにしておくべき。（拡張しようとすると修正が大変）
       // vue メソッドを用意しておいてもらい、あればそれを呼び出す形にする。無ければデフォルト動作をする。
       return {

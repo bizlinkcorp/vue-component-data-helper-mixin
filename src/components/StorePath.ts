@@ -23,7 +23,7 @@ import StorePathMixin from '@/mixins/StorePathMixin';
  * ```html
  * <template>
  *   <div class="comp-root">
- *     <store-path path="path.to" view-state-key="" class="store-path">
+ *     <store-path data-path="data.path.to" view-state-path="viewState.path.to" class="store-path">
  *       <div class="child1"> ... </div>
  *       <div class="child2"> ... </div>
  *     </store-path>

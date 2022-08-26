@@ -45,8 +45,8 @@ export default new Vuex.Store({
           },
         },
         modViewState: {
-          readonly: true,
           card11: {
+            readonly: true,
             amount: { readonly: false },
           },
         } as ViewStateTree,

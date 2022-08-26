@@ -18,16 +18,18 @@ const EMPTY_DATA_BIND_INFO = EMPTY_OBJECT;
  * - store mutations に `setStoreState` を指定し、編集データを直接設定する
  *
  * ## 使用方法
- * - パスを指定したいコンポーネントの mixin に組み込む
+ * - Storeのデータを参照したい単一コンポーネントに mixin に組み込む
  * - 組み込むことで以下のプロパティを指定することができる(input要素等の入力コンポーネントに設定することを想定する)
  *   - itemId
  *     - データパス下の項目IDを指定する
  *     - StorePathMixin で指定した上位パスと項目IDを連結したパスでデータを取得する
  * - 画面で利用する computed プロパティ
  *   - storeData
- *     - Store の dataKey + path + itemId のデータを参照／設定する
+ *     - Store state の JSON path (dataPath + itemId) のデータを参照／設定する
+ *     - path例：path.to.value1
  *   - storeViewState
- *     - Store の viewStateKey + path + itemId の viewState を参照する
+ *     - Store state の JSON path (viewStatePath + itemId) のデータを参照する
+ *     - FIXME 以下の説明は、利用者に委ねることになる可能性があるので、説明を考える必要がある。
  *     - 上位で指定された viewState を引き継ぐ。下位／自身で状態が定義されていた場合は、状態を上書きする。
  *     - 状態として `disabled`, `readonly` を定義する。指定がない場合のデフォルト値は以下の通り。
  *       - disabled : false
@@ -40,6 +42,7 @@ const EMPTY_DATA_BIND_INFO = EMPTY_OBJECT;
  * ```html
  * <template>
  *   <div>
+ *     <!-- 以下の disabled, readonly をどうするか -->
  *     <input type="text"
  *       v-model="storeData"
  *       :disabled="storeViewState.disabled"
@@ -207,10 +210,10 @@ export default defineComponent({
       return this.dataBindInfo as DataBinderInfo;
     },
     dataId() {
-      return resolvePath(this.parentInfo.module, this.parentInfo.dataKey, this.parentInfo.path, this.itemId);
+      return resolvePath(this.parentInfo.dataPath, this.itemId);
     },
     viewStateId() {
-      return resolvePath(this.parentInfo.module, this.parentInfo.viewStateKey, this.parentInfo.path, this.itemId);
+      return resolvePath(this.parentInfo.viewStatePath, this.itemId);
     },
     storeData: {
       get() {

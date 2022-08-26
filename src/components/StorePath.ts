@@ -59,6 +59,7 @@ export default defineComponent({
   mixins: [StorePathMixin],
   render(h: CreateElement): VNode {
     const children = (this.$scopedSlots.default ? this.$scopedSlots.default({}) : []) || [];
+    // FIXME タグ抜きで定義できれば実施したい。調査する。
     return h('div', this.$attrs, children);
   },
 });

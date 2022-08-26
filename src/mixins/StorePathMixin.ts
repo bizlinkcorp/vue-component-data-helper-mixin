@@ -214,6 +214,7 @@ export default defineComponent({
       required: false,
       default: undefined,
     },
+    // FIXME path, dataKey, viewStateKey はやめる。dataPath, viewStatePath それぞれを管理する。設定が無い場合は利用しない。inherit はそのまま続ける
     viewStateKey: {
       type: String,
       required: false,
@@ -266,6 +267,8 @@ export default defineComponent({
       const current = currentStoreViewState(this as unknown as StorePathMixinComputed);
       const parent = parentStoreViewState(this as unknown as StorePathMixinComputed);
 
+      // FIXME ここの部分の実装は別途切り出して、拡張できるようにしておくべき。（拡張しようとすると修正が大変）
+      // vue メソッドを用意しておいてもらい、あればそれを呼び出す形にする。無ければデフォルト動作をする。
       return {
         // 設定優先順位： 自ViewState > 親ViewState
         // disabled プロパティ

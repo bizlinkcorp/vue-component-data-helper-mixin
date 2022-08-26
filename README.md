@@ -119,6 +119,7 @@ src/path/to/TextBindComp.vue
 <template>
   <!-- 例として disable, readonly 属性に設定してある。この属性値は v-if 等で描画を切り替える等自由に設定して良い -->
   <input type="text" v-model="storeData" :disabled="storeViewState.disabled" :readonly="storeViewState.readonly" />
+  <!-- FIXME 拡張ポイントを用意しておく -->
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';

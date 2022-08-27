@@ -1,7 +1,6 @@
 import { defineComponent } from 'vue';
 import { getStoreValue, resolvePath, EMPTY_OBJECT } from './helper';
 import { DataBinderInfo, PROVIDE_DATA_BIND_INFO_NAME } from './StorePathMixin';
-import { ItemViewState } from '../store/StoreViewState';
 
 /** 空オブジェクトの固定値 */
 const EMPTY_DATA_BIND_INFO = EMPTY_OBJECT;
@@ -230,14 +229,17 @@ export default defineComponent({
         });
       },
     },
-    storeViewState(): ItemViewState {
-      // 設定優先順位： 自ViewState > 親ViewState > デフォルト
-      // TODO any化？
-      const itemViewState = getStoreValue<ItemViewState>((this.$store as any).state, this.viewStateId);
-      return {
-        disabled: itemViewState?.disabled ?? this.parentInfo.viewState?.disabled ?? false,
-        readonly: itemViewState?.readonly ?? this.parentInfo.viewState?.readonly ?? false,
-      };
+    itemViewState() {
+      return getStoreValue((this.$store as any).state, this.viewStateId);
     },
+    // storeViewState(): ItemViewState {
+    //   // 設定優先順位： 自ViewState > 親ViewState > デフォルト
+    //   // TODO any化？
+    //   const itemViewState = getStoreValue<ItemViewState>((this.$store as any).state, this.viewStateId);
+    //   return {
+    //     disabled: itemViewState?.disabled ?? this.parentInfo.viewState?.disabled ?? false,
+    //     readonly: itemViewState?.readonly ?? this.parentInfo.viewState?.readonly ?? false,
+    //   };
+    // },
   },
 });

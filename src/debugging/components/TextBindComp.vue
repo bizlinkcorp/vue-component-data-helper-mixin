@@ -6,10 +6,10 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import StoreBindMixin from '../../mixins/StoreBindMixin';
+import CustomStoreBindMixin from '../mixins/CustomStoreBindMixin';
 
 export default defineComponent({
   name: 'TextBindComp',
-  mixins: [StoreBindMixin],
+  mixins: [CustomStoreBindMixin],
 });
 </script>

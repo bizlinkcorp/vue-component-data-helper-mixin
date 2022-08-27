@@ -21,6 +21,10 @@ export interface DataBinderInfo {
 /** 空のデータバインド情報 */
 const EMPTY_DATA_BIND_INFO = EMPTY_OBJECT;
 
+// TODO コメントを書く
+// ViewState 拡張ポイント
+export type ProvideViewStateMethod = <T = any>() => T;
+
 // /**
 //  * export default しているコンポーネントの computed メソッドの定義
 //  * 外部化したメソッドで、コンポーネントインスタンスの computed を参照するために定義。
@@ -139,7 +143,7 @@ export default defineComponent({
   provide() {
     const dataPathFn = (): string => this.currentDataPath;
     const viewStatePathFn = (): string => this.currentViewStatePath;
-    const viewStateFn = (): ItemViewState => this.currentViewState;
+    const viewStateFn = <T = ItemViewState>(): T => this.currentViewState;
     return {
       [PROVIDE_DATA_BIND_INFO_NAME]: {
         get dataPath() {
@@ -204,7 +208,7 @@ export default defineComponent({
     currentStoreViewState(): ItemViewState {
       return getStoreValue<ItemViewState>(this.$store.state, this.currentViewStatePath);
     },
-    currentViewState(): ItemViewState {
+    currentViewState(): any {
       const current = this.currentStoreViewState;
       const parent = this.parentStoreViewState;
 
@@ -216,13 +220,19 @@ export default defineComponent({
       });
       // FIXME ここの部分の実装は別途切り出して、拡張できるようにしておくべき。（拡張しようとすると修正が大変）
       // vue メソッドを用意しておいてもらい、あればそれを呼び出す形にする。無ければデフォルト動作をする。
-      return {
-        // 設定優先順位： 自ViewState > 親ViewState
-        // disabled プロパティ
-        disabled: current?.disabled ?? parent?.disabled,
-        // readonly プロパティ
-        readonly: current?.readonly ?? parent?.readonly,
-      };
+      if (this.provideViewState) {
+        console.log('exist provideViewState');
+        return (this.provideViewState as ProvideViewStateMethod)();
+      }
+
+      return undefined;
+      // return {
+      //   // 設定優先順位： 自ViewState > 親ViewState
+      //   // disabled プロパティ
+      //   disabled: current?.disabled ?? parent?.disabled,
+      //   // readonly プロパティ
+      //   readonly: current?.readonly ?? parent?.readonly,
+      // } as T;
     },
   },
 });

@@ -17,9 +17,9 @@
     <div>
       <h2>vue-data-binder を利用した store 利用</h2>
       <div class="root-store">
-        <store-path data-path="data" view-state-path="viewState">
+        <custom-store-path data-path="data" view-state-path="viewState">
           <card-template :data-path="pathName" :view-state-path="pathName" inherit />
-        </store-path>
+        </custom-store-path>
       </div>
       <div class="module1-store">
         <card-template data-path="module1:modData.card11" view-state-path="module1:modViewState.card11" />
@@ -35,13 +35,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import CardTemplate from './components/CardTemplate.vue';
-import StorePath from '../components/StorePath';
+import CustomStorePath from './components/CustomStorePath';
 
 export default defineComponent({
   name: 'App',
   components: {
     CardTemplate,
-    StorePath,
+    CustomStorePath,
   },
   data() {
     return {

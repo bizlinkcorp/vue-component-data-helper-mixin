@@ -206,7 +206,7 @@ export default defineComponent({
      * @returns 現在パスの viewState 値
      */
     currentStoreViewState(): ItemViewState {
-      return getStoreValue<ItemViewState>(this.$store.state, this.currentViewStatePath);
+      return getStoreValue<ItemViewState>((this.$store as any).state, this.currentViewStatePath);
     },
     currentViewState(): any {
       const current = this.currentStoreViewState;

@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue';
-import StorePathMixin from '../../mixins/StorePathMixin';
+import StorePathMixin from '@/mixins/StorePathMixin';
 import { AppViewState } from '../store/ViewState';
 
 export default defineComponent({

@@ -1,4 +1,4 @@
-import { ViewStateTree } from '../../store/ViewStateTree';
+import { ViewStateTree } from '@/store/ViewStateTree';
 export interface AppViewState {
   disabled?: boolean;
   readonly?: boolean;

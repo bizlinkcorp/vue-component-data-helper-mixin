@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import type { ViewStateTree } from '../../store/StoreViewState';
 import { setStoreState } from '../../store/StoreControl';
+import { AppViewStateTree } from './ViewState';
 
 Vue.use(Vuex);
 
@@ -20,16 +20,25 @@ export default new Vuex.Store({
       },
     },
     viewState: {
+      // viewState 全体 disabled
       disabled: true,
       card1: {
-        detail: {
-          disabled: false,
-        },
+        // 個別項目
+        detail: { disabled: false },
       },
       card2: {
+        // card11 全体 disabled
         disabled: false,
       },
-    } as ViewStateTree,
+      card11: {
+        // card11 全体 disabled
+        disabled: false,
+        // card11 全体 readonly
+        readonly: true,
+        // 個別項目
+        amount: { readonly: false },
+      },
+    } as AppViewStateTree,
   }),
   mutations: {
     setStoreState,
@@ -44,12 +53,6 @@ export default new Vuex.Store({
             amount: 5000,
           },
         },
-        modViewState: {
-          card11: {
-            readonly: true,
-            amount: { readonly: false },
-          },
-        } as ViewStateTree,
       }),
     },
   },

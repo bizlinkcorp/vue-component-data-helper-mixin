@@ -1,18 +1,19 @@
 import { defineComponent } from 'vue';
 import StoreBindMixin from '../../mixins/StoreBindMixin';
-import { ItemViewState } from '../../store/StoreViewState';
+import { AppViewState } from '../store/ViewState';
 
 export default defineComponent({
   name: 'CustomStoreBindMixin',
   mixins: [StoreBindMixin],
   computed: {
-    storeViewState(): ItemViewState {
+    itemViewState(): AppViewState {
       // 設定優先順位： 自ViewState > 親ViewState > デフォルト
       // TODO any化？
-      const itemViewState = this.itemViewState as ItemViewState;
+      const itemViewState = this.storeViewState as AppViewState;
+      const parentViewState = this.parentInfo.viewState<AppViewState>();
       return {
-        disabled: itemViewState?.disabled ?? this.parentInfo.viewState?.disabled ?? false,
-        readonly: itemViewState?.readonly ?? this.parentInfo.viewState?.readonly ?? false,
+        disabled: itemViewState?.disabled ?? parentViewState.disabled ?? false,
+        readonly: itemViewState?.readonly ?? parentViewState.readonly ?? false,
       };
     },
   },

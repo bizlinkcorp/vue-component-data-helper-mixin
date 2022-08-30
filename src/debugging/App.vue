@@ -16,18 +16,20 @@
     </div>
     <div>
       <h2>vue-data-binder を利用した store 利用</h2>
-      <div class="root-store">
-        <custom-store-path data-path="data" view-state-path="viewState">
-          <card-template :data-path="pathName" :view-state-path="pathName" inherit />
-        </custom-store-path>
-      </div>
-      <div class="module1-store">
-        <card-template data-path="module1:modData.card11" view-state-path="module1:modViewState.card11" />
-      </div>
-      <div>
-        <h3>store状態</h3>
-        <pre style="text-align: left">Store.state = ({{ allStoreState }})</pre>
-      </div>
+      <custom-store-path view-state-path="viewState">
+        <div class="root-store">
+          <custom-store-path data-path="data" inherit>
+            <card-template :data-path="pathName" :view-state-path="pathName" inherit />
+          </custom-store-path>
+        </div>
+        <div class="module1-store">
+          <card-template data-path="module1:modData.card11" view-state-path="card11" inherit />
+        </div>
+        <div>
+          <h3>store状態</h3>
+          <pre style="text-align: left">Store.state = ({{ allStoreState }})</pre>
+        </div>
+      </custom-store-path>
     </div>
   </div>
 </template>

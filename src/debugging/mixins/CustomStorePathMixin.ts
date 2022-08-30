@@ -1,13 +1,15 @@
 import { defineComponent } from 'vue';
 import StorePathMixin from '../../mixins/StorePathMixin';
+import { AppViewState } from '../store/ViewState';
 
 export default defineComponent({
   name: 'CustomStorePathMixin',
   mixins: [StorePathMixin],
   methods: {
-    provideViewState() {
-      const current = this.currentStoreViewState;
-      const parent = this.parentStoreViewState;
+    getProvideViewState() {
+      const current = this.currentViewState<AppViewState>();
+      const parent = this.parentViewState<AppViewState>();
+
       return {
         // 設定優先順位： 自ViewState > 親ViewState
         // disabled プロパティ

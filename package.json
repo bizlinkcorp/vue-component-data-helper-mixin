@@ -21,10 +21,11 @@
     "build:lib": "vite build",
     "build:type": "tsc --emitDeclarationOnly --declaration -P tsconfig.types.json",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint",
+    "lint": "eslint \"./src/**/*.{ts,tsx,vue}\" \"./tests/**/*.ts\" && prettier --check \"./src/**/*.{ts,tsx,vue}\" \"./tests/**/*.ts\"",
     "cli:serve": "vue-cli-service serve src/debugging/main.ts",
     "cli:build": "vue-cli-service build",
     "cli:build:lib": "vue-cli-service build --target lib src/vue-data-binder.ts",
+    "cli:lint": "vue-cli-service lint",
     "vite:serve": "vite",
     "vite:build": "vite build"
   },

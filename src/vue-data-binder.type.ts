@@ -1,6 +1,6 @@
-import { DataBinderInfo } from './mixins/StorePathMixin';
+import { DataBinderInfo } from './mixins/helper';
 import { StateSetPayload } from './store/StoreControl';
-import { ViewStateTree, ItemViewState } from './store/StoreViewState';
+import { ViewStateTree } from './store/ViewStateTree';
 
-export type { DataBinderInfo, StateSetPayload, ViewStateTree, ItemViewState };
+export type { DataBinderInfo, StateSetPayload, ViewStateTree };
 export * from './vue-data-binder';

@@ -15,7 +15,7 @@ import StorePathMixin from '@/mixins/StorePathMixin';
  *
  * ## 描画結果
  * - div 要素を配置する。
- * - 属性値は引継ぎ表示する
+ * - 属性値(class等)はdivに引継ぐ
  *
  * @example
  * ## コンポーネント利用方法
@@ -47,7 +47,7 @@ import StorePathMixin from '@/mixins/StorePathMixin';
  *
  * ```html
  * <div class="comp-root">
- *   <div class="store-path"> <!-- store-path 要素は、div として描画する -->
+ *   <div class="store-path"> <!-- store-path 要素は、div として描画する。class は引き継がれる -->
  *     <div class="child1"> ... </div>
  *     <div class="child2"> ... </div>
  *   </div>

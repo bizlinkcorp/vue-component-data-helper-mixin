@@ -1,53 +1,62 @@
 /** 空オブジェクト */
-const EMPTY_OBJECT = {};
+export const EMPTY_OBJECT = Object.freeze(Object.create(null));
 
 /**
- * ストア値取得（内部用）
+ * ViewState取得メソッド型
  *
- * @param parentState 親のストア値
- * @param paths 取得パスを '.' で split した値
- * @param idx ストア参照インデックス
- * @returns パスの値
+ * @remarks
+ * ViewStateを取得するメソッドの形式
+ *
+ * @typeParam S ViewStateデータ型
+ * @retirms ViewStateインスタンス
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getStoreValueInner = (parentState: any, paths: string[], idx = 0): any => {
-  const pathValue = parentState[paths[idx]];
-  const pathValueIsUndefined = !pathValue;
-
-  if (idx === paths.length - 1 || pathValueIsUndefined) {
-    // 最下層 もしくは、undefined
-    return pathValue;
-  }
-  // インデックスをずらして再帰呼び出し
-  return getStoreValueInner(pathValue, paths, idx + 1);
-};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ViewStateデータは任意でどのような値でも指定可能な為、any を許容する
+export type GetViewStateMethod = <S = any>() => S;
 
 /**
- * ストア値取得
- *
- * @example
- * ```ts
- * // store状態
- * store.state = {
- *   path: {
- *     to: {
- *       value: 'hoge',
- *     },
- *   },
- * };
- *
- * // 実行結果
- * getStoreValue(store, 'path') = { to: { value: 'hoge' }}
- * getStoreValue(store, 'path.to') = { value: 'hoge' }
- * getStoreValue(store, 'path.to.value') = 'hoge'
- * ```
- *
- * @param storeState ストア state そのもの
- * @param path state の取得パス (パス例： module:path.to)
- * @returns ストア state 値
+ * データバインド情報
  */
-const getStoreValue = <T = any>(storeState: any, path: string): T => {
-  return getStoreValueInner(storeState, path.split(/[:.]/));
+export interface DataBinderInfo {
+  /** データパス */
+  dataPath: () => string | undefined;
+  /** 画面状態パス */
+  viewStatePath: () => string | undefined;
+  // TODO type は any もしくは generics
+  /** 親画面状態 */
+  viewState: GetViewStateMethod;
+}
+
+/**
+ * 空のデータバインド情報
+ *
+ * @remarks
+ * - injectで利用する際のデフォルト値等で利用する
+ * - 返却値
+ *   - `dataPath, viewStatePath = undefined`
+ *   - `viewState = ${{@link EMPTY_OBJECT}}
+ *
+ */
+export const EMPTY_DATA_BIND_INFO: DataBinderInfo = Object.freeze({
+  dataPath: () => undefined,
+  viewStatePath: () => undefined,
+  viewState: () => EMPTY_OBJECT,
+});
+
+/**
+ * パス値決定（内部メソッド）
+ *
+ * @remarks
+ * パス要素の値によって返却値を変える。
+ *
+ * - !== undefined： `${path} + '.'`
+ * - === undefined: `''`
+ *
+ * @param path パス要素
+ * @param isLast 最終要素であるか否か
+ * @returns パス要素を解決した値
+ */
+const pathValueInner = (path: string | undefined): string => {
+  return path ? `${path}.` : '';
 };
 
 /**
@@ -71,26 +80,8 @@ const getStoreValue = <T = any>(storeState: any, path: string): T => {
  * @param paths パス要素配列
  * @returns パス
  */
-const resolvePath = (...paths: (string | undefined)[]): string => {
-  /**
-   * パス値決定
-   * @remarks
-   * パス要素の値によって返却値を変える。
-   *
-   * - !== undefined： `${path} + '.'`
-   * - === undefined: `''`
-   *
-   * @param path パス要素
-   * @param isLast 最終要素であるか否か
-   * @returns パス要素を解決した値
-   */
-  const pathValue = (path: string | undefined): string => {
-    return path ? `${path}.` : '';
-  };
-
-  const resolved = paths.reduce((prev, path) => `${prev}${pathValue(path)}`, '') as string;
+export const resolvePath = (...paths: (string | undefined)[]): string => {
+  const resolved = paths.reduce((prev, path) => `${prev}${pathValueInner(path)}`, '') as string;
   // パスが設定されていた場合、最後の '.' を除去する
   return resolved.length > 0 ? resolved.substring(0, resolved.length - 1) : resolved;
 };
-
-export { getStoreValue, resolvePath, EMPTY_OBJECT };

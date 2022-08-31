@@ -27,6 +27,14 @@ export interface DataBinderInfo {
 }
 
 /**
+ * データバインド情報をインジェクトしたインスタンス
+ */
+export interface DataBindInfoInjectedInstance {
+  /** データバインド情報 */
+  dataBindInfo: DataBinderInfo;
+}
+
+/**
  * 空のデータバインド情報
  *
  * @remarks

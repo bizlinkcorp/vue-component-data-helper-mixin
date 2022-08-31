@@ -1,9 +1,24 @@
 import { defineComponent } from 'vue';
 import { getStoreState } from '../store/StoreControl';
-import { EMPTY_OBJECT, EMPTY_DATA_BIND_INFO, DataBinderInfo, resolvePath, GetViewStateMethod } from './helper';
+import {
+  EMPTY_OBJECT,
+  EMPTY_DATA_BIND_INFO,
+  DataBinderInfo,
+  resolvePath,
+  GetViewStateMethod,
+  DataBindInfoInjectedInstance,
+} from './helper';
 
 /** provide情報キー */
 export const PROVIDE_DATA_BIND_INFO_NAME = 'parentDataBindInfo';
+
+/**
+ * 利用者で実装する Vue メソッド
+ */
+interface VueUserImplements {
+  /** provide として設定する情報を返却する */
+  getProvideViewState?: GetViewStateMethod;
+}
 
 /**
  * store path mixin
@@ -83,7 +98,7 @@ export default defineComponent({
   computed: {
     parentInfo() {
       // 継承設定がない場合は、空の親オブジェクトを返却する
-      return (this.inherit ? this.dataBindInfo : EMPTY_DATA_BIND_INFO) as DataBinderInfo;
+      return this.inherit ? (this as unknown as DataBindInfoInjectedInstance).dataBindInfo : EMPTY_DATA_BIND_INFO;
     },
     provideDataPath() {
       return resolvePath(this.parentInfo.dataPath(), this.dataPath);
@@ -104,7 +119,6 @@ export default defineComponent({
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ViewStateデータは任意でどのような値でも指定可能な為、any を許容する
     parentViewState<S = any>(): S {
-      // FIXME 返却値はItemViewStateではない。generics使えるのでメソッドの方が良い。
       return this.parentInfo.viewState<S>();
     },
     /**
@@ -116,15 +130,14 @@ export default defineComponent({
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ViewStateデータは任意でどのような値でも指定可能な為、any を許容する
     currentViewState<S = any>(): S {
-      // FIXME 返却値はItemViewStateではない。generics使えるのでメソッドの方が良い。
-      return getStoreState<S>((this.$store as any).state, this.provideViewStatePath);
+      return getStoreState<S>(this.$store.state, this.provideViewStatePath);
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ViewStateデータは任意でどのような値でも指定可能な為、any を許容する
     provideViewState<S = any>(): S {
-      // FIXME ここの部分の実装は別途切り出して、拡張できるようにしておくべき。（拡張しようとすると修正が大変）
       // vue メソッドを用意しておいてもらい、あればそれを呼び出す形にする。無ければデフォルト動作をする。
-      if (this.getProvideViewState) {
-        return (this.getProvideViewState as GetViewStateMethod)<S>();
+      const userImplementsInst = this as unknown as VueUserImplements;
+      if (userImplementsInst.getProvideViewState) {
+        return userImplementsInst.getProvideViewState<S>();
       }
 
       return EMPTY_OBJECT;

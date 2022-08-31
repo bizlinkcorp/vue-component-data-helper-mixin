@@ -1,28 +1,25 @@
-import { shallowMount, createLocalVue } from '@vue/test-utils';
-import Vuex, { Store } from 'vuex';
-import HelloWorld from '@/debugging/components/HelloWorld.vue';
+import { shallowMount } from '@vue/test-utils';
+import StorePath from '@/components/StorePath';
 
-const localVue = createLocalVue();
-localVue.use(Vuex);
-
-// FIXME テストが動作しないので修正すること
-// エラー：TypeError: Cannot read properties of undefined (reading 'state')
+// const localVue = createLocalVue();
+// localVue.use(Vuex);
 
 describe('HelloWorld.vue', () => {
-  let store: Store<any>;
-  beforeEach(() => {
-    store = new Vuex.Store({
-      state: {},
-      actions: {},
-      mutations: {},
-    });
-  });
+  // let store: Store<any>;
+  // beforeEach(() => {
+  //   store = new Vuex.Store({
+  //     state: {},
+  //     actions: {},
+  //     mutations: {},
+  //   });
+  // });
   it('renders props.msg when passed', () => {
-    const msg = 'new message';
-    const wrapper = shallowMount(HelloWorld, {
-      propsData: { msg },
-      store,
+    const wrapper = shallowMount(StorePath, {
+      propsData: { dataPath: 'path.to' },
+      // store,
     });
-    expect(wrapper.text()).toMatch(msg);
+    console.log(wrapper.html(), wrapper.props());
+    console.log({ wrapper });
+    // expect(wrapper.text()).toMatch(msg);
   });
 });

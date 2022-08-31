@@ -21,3 +21,10 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# add
+/coverage
+
+# add for vitest
+# unplugin-auto-import/vite AutoImport で生成される d.ts 
+/auto-imports.d.ts

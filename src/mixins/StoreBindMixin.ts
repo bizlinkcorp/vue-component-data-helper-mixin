@@ -1,6 +1,6 @@
 import { defineComponent } from 'vue';
 import { getStoreState, StateSetPayload } from '../store/StoreControl';
-import { DataBinderInfo, EMPTY_DATA_BIND_INFO, resolvePath } from './helper';
+import { DataBinderInfo, EMPTY_DATA_BIND_INFO, resolvePath, DataBindInfoInjectedInstance } from './helper';
 import { PROVIDE_DATA_BIND_INFO_NAME } from './StorePathMixin';
 
 /**
@@ -52,33 +52,30 @@ export default defineComponent({
     },
   },
   computed: {
-    parentInfo() {
-      return this.dataBindInfo as DataBinderInfo;
+    parentInfo(): DataBinderInfo {
+      return (this as unknown as DataBindInfoInjectedInstance).dataBindInfo;
     },
-    dataId() {
+    dataId(): string {
       return resolvePath(this.parentInfo.dataPath(), this.itemId);
     },
-    viewStateId() {
+    viewStateId(): string {
       return resolvePath(this.parentInfo.viewStatePath(), this.itemId);
     },
     storeData: {
       get() {
-        // TODO any化？
-        return getStoreState((this.$store as any).state, this.dataId);
+        return getStoreState(this.$store.state, this.dataId);
       },
       set(newVal: unknown) {
         // FIXME store mutation メソッド名がリテラル
         const commitTargetName = 'setStoreState';
-        // TODO any化？
-        (this.$store as any).commit(commitTargetName, {
+        this.$store.commit(commitTargetName, {
           path: this.dataId,
           value: newVal,
         } as StateSetPayload);
       },
     },
     storeViewState() {
-      // TODO any化
-      return getStoreState((this.$store as any).state, this.viewStateId);
+      return getStoreState(this.$store.state, this.viewStateId);
     },
   },
 });

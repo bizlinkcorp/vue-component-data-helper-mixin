@@ -22,11 +22,11 @@
     "build:lib": "vue-tsc --noEmit -p tsconfig.types.json && vite build",
     "build:type": "tsc --emitDeclarationOnly --declaration -P tsconfig.types.json",
     "lint": "eslint \"./{src,example}/**/*.{ts,tsx,vue}\" && prettier --check \"./{src,example}/**/*.{ts,tsx,vue}\"",
-    "test:unit": "vitest --config ./vitest.config.ts run --coverage",
-    "test:lint": "eslint \"./tests/**/*.ts\" && prettier --check \"./tests/**/*.ts\""
+    "test:lint": "eslint \"./tests/**/*.ts\" && prettier --check \"./tests/**/*.ts\"",
+    "test:unit": "vitest --config ./vitest.config.ts run --coverage"
   },
   "dependencies": {
-    "vue": "^2.6.14",
+    "vue": "^2.7.10",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
@@ -35,14 +35,14 @@
     "@vitejs/plugin-vue2": "^1.1.2",
     "@vitest/coverage-c8": "^0.22.1",
     "@vue/eslint-config-typescript": "^11.0.0",
-    "@vue/test-utils": "^1.1.3",
-    "@vue/vue2-jest": "^27.0.0",
+    "@vue/test-utils": "^1.3.0",
     "eslint": "^8.21.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^9.3.0",
+    "jsdom": "^20.0.0",
     "prettier": "^2.4.1",
-    "typescript": "~4.7.4",
+    "typescript": "~4.8.2",
     "unplugin-auto-import": "^0.11.2",
     "vite": "^3.0.9",
     "vite-tsconfig-paths": "^3.5.0",

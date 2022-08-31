@@ -11,7 +11,7 @@ export default defineConfig({
   test: {
     include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     // TODO tsconfig.json から持ってくる方法ないか？
-    alias: [{ find: '@', replacement: './src' }],
+    alias: [{ find: '@/', replacement: './src/' }],
     environment: 'jsdom',
   },
 });

@@ -1,4 +1,4 @@
-import { ViewStateTree } from '@/store/ViewStateTree';
+import { ViewStateTree } from 'vue-data-binder';
 export interface AppViewState {
   disabled?: boolean;
   readonly?: boolean;

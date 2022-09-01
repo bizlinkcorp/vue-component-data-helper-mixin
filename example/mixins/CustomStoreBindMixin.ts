@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue';
-import StoreBindMixin from '@/mixins/StoreBindMixin';
+import { StoreBindMixin } from 'vue-data-binder';
 import { AppViewState } from '../store/ViewState';
 
 export default defineComponent({

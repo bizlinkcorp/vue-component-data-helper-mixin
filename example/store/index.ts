@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { setStoreState } from '@/store/StoreControl';
+import { setStoreState } from 'vue-data-binder';
 import { AppViewStateTree } from './ViewState';
 
 Vue.use(Vuex);

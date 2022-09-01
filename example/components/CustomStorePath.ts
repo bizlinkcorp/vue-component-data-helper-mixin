@@ -1,6 +1,6 @@
 import { defineComponent } from 'vue';
+import { StorePath } from 'vue-data-binder';
 import CustomStorePathMixin from '../mixins/CustomStorePathMixin';
-import StorePath from '@/components/StorePath';
 
 export default defineComponent({
   name: 'StorePath',

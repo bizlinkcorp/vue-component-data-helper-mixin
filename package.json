@@ -9,7 +9,6 @@
   "files": [
     "dist/"
   ],
-  "private": true,
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",

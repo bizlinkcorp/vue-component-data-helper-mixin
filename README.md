@@ -16,6 +16,18 @@
 - オプションで項目に表示状態を定義することができ、画面コンポーネントで状態値を自由に利用できる。
 - 表示状態の値は上位を継承する（上位の値と現在の値を鑑みた設定値を利用するには個別に実装が必要）。
 
+## ライブラリで公開するコンポーネント
+
+|  No | 公開名                                           | タイプ        | 説明                                                           | 備考                                                          |
+| --: | ------------------------------------------------ | ------------- | -------------------------------------------------------------- | ------------------------------------------------------------- |
+|   1 | [StoreBindMixin](./src/mixins/StoreBindMixin.ts) | Vue mixin     | Store state と入力項目を結びつけるコンポーネント mixin         | 入力単一項目コンポーネントに設定することを想定                |
+|   2 | [StorePathMixin](./src/mixins/StorePathMixin.ts) | Vue mixin     | StoreBindMixin で参照する項目の Store state パスを設定する     | StoreBindMixin を束ねるコンポーネントに設定することを想定する |
+|   3 | [StorePath](./src/components/StorePath.ts)       | Vue Component | StorePathMixin をカスタム利用しない場合の単一コンポーネント    |                                                               |
+|   4 | [setStoreState](./src/store/StoreControl.ts)     | method        | StoreBindMixin の storeData 設定時に設定する mutation メソッド | root store の mutation に設定する。                           |
+|   5 | [StateSetPayload](./src/store/StoreControl.ts)   | type          | mutation に設定した `setStoreState` の Payload                 | generics を利用して viewState のデータ型を指定可能            |
+|   6 | [ViewStateTree](./src/store/ViewStateTree.ts)    | type          | store state に設定する viewState の tree データ型              | generics を利用して viewState のデータ型を指定可能            |
+|   7 | [DataBinderInfo](./src/mixins/helper.ts)         | type          | StorePathMixin から引き継がれるデータバインド情報              | ViewState を引継ぐ場合、StorePathMixin をカスタムする         |
+
 ## getting start
 
 シンプルな input text 項目に store の値をバインドを実施する。
@@ -120,18 +132,6 @@ export default defineComponent({
   </div>
 </div>
 ```
-
-## ライブラリで公開するコンポーネント
-
-|  No | 公開名                                           | タイプ        | 説明                                                           | 備考                                                          |
-| --: | ------------------------------------------------ | ------------- | -------------------------------------------------------------- | ------------------------------------------------------------- |
-|   1 | [StoreBindMixin](./src/mixins/StoreBindMixin.ts) | Vue mixin     | Store state と入力項目を結びつけるコンポーネント mixin         | 入力単一項目コンポーネントに設定することを想定                |
-|   2 | [StorePathMixin](./src/mixins/StorePathMixin.ts) | Vue mixin     | StoreBindMixin で参照する項目の Store state パスを設定する     | StoreBindMixin を束ねるコンポーネントに設定することを想定する |
-|   3 | [StorePath](./src/components/StorePath.ts)       | Vue Component | StorePathMixin をカスタム利用しない場合の単一コンポーネント    |                                                               |
-|   4 | [setStoreState](./src/store/StoreControl.ts)     | method        | StoreBindMixin の storeData 設定時に設定する mutation メソッド | root store の mutation に設定する。                           |
-|   5 | [StateSetPayload](./src/store/StoreControl.ts)   | type          | mutation に設定した `setStoreState` の Payload                 | generics を利用して viewState のデータ型を指定可能            |
-|   6 | [ViewStateTree](./src/store/ViewStateTree.ts)    | type          | store state に設定する viewState の tree データ型              | generics を利用して viewState のデータ型を指定可能            |
-|   7 | [DataBinderInfo](./src/mixins/helper.ts)         | type          | StorePathMixin から引き継がれるデータバインド情報              | ViewState を引継ぐ場合、StorePathMixin をカスタムする         |
 
 ## 使用方法
 

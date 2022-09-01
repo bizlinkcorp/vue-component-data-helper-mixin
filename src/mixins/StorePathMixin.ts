@@ -51,6 +51,82 @@ interface VueUserImplements {
  * |   9 | methods  | currentViewState        | any            | provideViewStatePath に一致した store の viewState を取得                                                            | generics 利用可能     |
  * |  10 | methods  | provideViewState        | any            | 下位へ引き継ぐ viewState。getProvideViewState の返却値を設定する。getProvideViewState 未実装の場合は空オブジェクト。 | generics 利用可能     |
  * |  11 | methods  | getProvideViewState     | any            | 下位へ引き継ぐ viewState の値を返却する。mixin では未実装。拡張要素。                                                | 利用者にて実装する    |
+ *
+ * ##### 参考：パス要素継承イメージ
+ *
+ * ```html
+ * <!--
+ *   store-path： StorePathMixin を適用したコンポーネントとする。
+ *   store-bind： StoreBindMixin を適用したコンポーネントとする。
+ * -->
+ * <store-path data-path="dataKey.data.path" view-state-path="viewStateKey.case.path">
+ *   <!-- A -->
+ *   <store-path data-path="to" >
+ *     <!-- B -->
+ *     <store-bind item-id="id1" />
+ *       <!-- C -->
+ *     </store-bind>
+ *   </store-path>
+ *   <store-path data-path="module1:hoge" view-state-path="module1:viewState.hoge" no-inherit-data-path no-inherit-view-state-path>
+ *     <!-- D -->
+ *     <store-bind item-id="huga">
+ *       <!-- E -->
+ *     </store-bind>
+ *   </store-path>
+ * </store-path>
+ * ```
+ *
+ * 上記の設定状況の場合の、継承状況や項目設定状況
+ *
+ * |  No | type       | props dataPath    | props viewStatePath     | prop itemId | remarks                                                                                      | provideDataPath \| dataId | provideViewStatePath \| viewStateId |
+ * | --: | ---------- | ----------------- | ----------------------- | ----------- | -------------------------------------------------------------------------------------------- | ------------------------- | ----------------------------------- |
+ * |   A | store-path | dataKey.data.path | viewStateKey.case1.path | -           | 最上位パス定義                                                                               | dataKey.data.path         | viewStateKey.case.path              |
+ * |   B | store-path | to                |                         | -           | dataPath, viewStatePath を上位から継承。自身の dataPath, viewStatePath は上位の値と連結      | dataKey.data.path.to      | viewStateKey.case.path              |
+ * |   C | store-bind | -                 | -                       | id1         | dataPath, viewStatePath を上位から継承。自身の itemId を 上位の (data\|viewState)Path と連結 | dataKey.data.path.to.id1  | viewStateKey.case.path.id1          |
+ * |   D | store-path | module1:hoge      | module1:viewState.hoge  | -           | no-inherit-data-path, no-inherit-view-state-path 指定の為、本要素で指定した値のみ有効        | module1:hoge              | module1:viewState.hoge              |
+ * |   E | store-bind | -                 | -                       | huga        | dataPath, viewStatePath を上位から継承。自身の itemId を 上位の (data\|viewState)Path と連結 | module1:hoge.huga         | module1:viewState.hoge.huga         |
+ *
+ * @example
+ *
+ * ```vue
+ * <template>
+ *   <div class="card-template">
+ *     <text-bind-comp item-id="no" />
+ *     <text-bind-comp item-id="detail" />
+ *     <text-bind-comp item-id="amount" />
+ *   </div>
+ * </template>
+ * <script lang="ts">
+ *   import { defineComponent } from 'vue';
+ *   import { StorePathMixin } from 'vue-data-binder';
+ *   import TextBindComp from './TextBindComp.vue'; // StoreBindMixin の example 参照
+ *
+ *   export default defineComponent({
+ *     name: 'CardTemplate',
+ *     mixins: [StorePathMixin], // mixins で StorePathMixin を指定する
+ *     components: {
+ *       TextBindComp,
+ *     },
+ *     // ...
+ *     methods: {
+ *       // 必要な場合は個別に実装する
+ *       getProvideViewState() {
+ *         const current = this.currentViewState<AppViewState>();
+ *         const parent = this.parentViewState<AppViewState>();
+ *
+ *         // 上位の viewState を下位に伝搬する
+ *         return {
+ *           // 設定優先順位： 自ViewState > 親ViewState
+ *           // disabled プロパティ
+ *           disabled: current?.disabled ?? parent?.disabled,
+ *           // readonly プロパティ
+ *           readonly: current?.readonly ?? parent?.readonly,
+ *         };
+ *       },
+ *     },
+ *   });
+ * </script>
+ * ```
  */
 export default defineComponent({
   name: 'StorePathMixin',

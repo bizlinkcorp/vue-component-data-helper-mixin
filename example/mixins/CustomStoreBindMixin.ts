@@ -8,7 +8,6 @@ export default defineComponent({
   computed: {
     itemViewState(): AppViewState {
       // 設定優先順位： 自ViewState > 親ViewState > デフォルト
-      // TODO any化？
       const itemViewState = this.storeViewState as AppViewState;
       const parentViewState = this.parentInfo.viewState<AppViewState>();
       return {

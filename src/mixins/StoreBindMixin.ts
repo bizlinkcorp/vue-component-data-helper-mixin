@@ -34,8 +34,38 @@ import { PROVIDE_DATA_BIND_INFO_NAME } from './StorePathMixin';
  * |   6 | computed | storeViewState | any            | viewStateId に一致した store の viewState を取得          | 上位引継ぎは無し。viewStateId の値のみ取得 |
  *
  * - 注意点
- *   - StorePathMixin の `parentInfo.viewState()` を利用する場合は、計算プロパティを個別実装すること。
+ *   - storeViewState では Store の自身のパスの viewState のみ取得する。`parentInfo.viewState()` を利用する場合は、計算プロパティを実装すること。
  *
+ * @example
+ *
+ * ```vue
+ * <template>
+ *   <!-- 例として disable, readonly 属性に設定してある。この属性値は v-if 等で描画を切り替える等自由に設定して良い -->
+ *   <input type="text" v-model="storeData" :disabled="storeViewState.disabled" :readonly="storeViewState.readonly" />
+ * </template>
+ * <script lang="ts">
+ *   import { defineComponent } from 'vue';
+ *   import { StoreBindMixin } from 'vue-data-binder';
+ *
+ *   export default defineComponent({
+ *     name: 'TextBindComp',
+ *     mixins: [StoreBindMixin], // mixins で StoreBindMixin を指定する
+ *     // ...
+ *     computed: {
+ *       // parentInfo.viewState() を意識した viewState
+ *       itemViewState(): AppViewState {
+ *         // 設定優先順位： 自ViewState > 親ViewState > デフォルト
+ *         const itemViewState = this.storeViewState as AppViewState;
+ *         const parentViewState = this.parentInfo.viewState<AppViewState>();
+ *         return {
+ *           disabled: itemViewState?.disabled ?? parentViewState.disabled ?? false,
+ *           readonly: itemViewState?.readonly ?? parentViewState.readonly ?? false,
+ *         };
+ *       },
+ *     },
+ *   });
+ * </script>
+ * ```
  */
 export default defineComponent({
   name: 'StoreBindMixin',

@@ -7,7 +7,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 //   vite-tsconfig-paths ⇒ ソースコードのalias解決(import hoge from '@/path/to/hoge' の "@" の解決）。vite.config.ts で resolve.alias を指定する方法もあるが、tsconfig.json の管理に統一する。
 
 export default defineConfig({
-  plugins: [vue(), tsconfigPaths()],
+  plugins: [vue(), tsconfigPaths({ loose: true })],
   // ライブラリモードなので、publicディレクトリは無効（設定されているとビルド時に dist へコピーされる）
   publicDir: false,
   // css: {

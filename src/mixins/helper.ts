@@ -21,7 +21,6 @@ export interface DataBinderInfo {
   dataPath: () => string | undefined;
   /** 画面状態パス */
   viewStatePath: () => string | undefined;
-  // TODO type は any もしくは generics
   /** 親画面状態 */
   viewState: GetViewStateMethod;
 }

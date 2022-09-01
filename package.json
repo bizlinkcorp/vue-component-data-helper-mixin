@@ -16,6 +16,12 @@
     "url": "https://github.com/bizlinkcorp/vue-data-binder"
   },
   "author": "BizLink Co.,Ltd.",
+  "keywords": [
+    "vue",
+    "bind",
+    "store",
+    "vuex"
+  ],
   "scripts": {
     "serve": "vite",
     "build": "npm run build:lib && npm run build:type",

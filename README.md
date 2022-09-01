@@ -198,7 +198,7 @@ src/path/to/TextBindComp.vue
   store-path： StorePathMixin を適用したコンポーネントとする。
   store-bind： StoreBindMixin を適用したコンポーネントとする。
 -->
-<store-path data-path="dataKey.data1.path" view-state-path="viewStateKey.case1.path">
+<store-path data-path="dataKey.data.path" view-state-path="viewStateKey.case.path">
   <!-- A -->
   <store-path data-path="to" >
     <!-- B -->
@@ -217,13 +217,13 @@ src/path/to/TextBindComp.vue
 
 上記の設定状況の場合の、継承状況や項目設定状況
 
-|  No | type       | prop dataPath | prop viewStatePath      | prop item-id | remarks                                                                                      | store state data path        | store state viewState path  |
-| --: | ---------- | ------------- | ----------------------- | ------------ | -------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------- |
-|   A | store-path | dataKey.data1 | viewStateKey.case1.path | -            |                                                                                              | dataKey.data1.path           | viewStateKey.case1.path     |
-|   B | store-path | to            |                         | -            | dataPath, viewStatePath を上位から継承。自身の dataPath, viewStatePath は上位の値と連結      | dataKey.data1.path.to        | viewStateKey.case1.path     |
-|   C | store-bind | -             | -                       | id1          | dataPath, viewStatePath を上位から継承。自身の itemId を 上位の (data\|viewState)Path と連結 | dataKey.dataPath.path.to.id1 | viewStateKey.case1.path.id1 |
-|   D | store-path | module1:hoge  | module1:viewState.hoge  | -            | no-inherit-data-path, no-inherit-view-state-path 指定の為、本要素で指定した値のみ有効        | module1.hoge                 | module1.viewState.hoge      |
-|   E | store-bind | -             | -                       | huga         |                                                                                              | module1.hoge.huga            | module1.viewState.hoge.huga |
+|  No | type       | props dataPath    | props viewStatePath     | prop itemId | remarks                                                                                      | provideDataPath \| dataId | provideViewStatePath \| viewStateId |
+| --: | ---------- | ----------------- | ----------------------- | ----------- | -------------------------------------------------------------------------------------------- | ------------------------- | ----------------------------------- |
+|   A | store-path | dataKey.data.path | viewStateKey.case1.path | -           | 最上位パス定義                                                                               | dataKey.data.path         | viewStateKey.case.path              |
+|   B | store-path | to                |                         | -           | dataPath, viewStatePath を上位から継承。自身の dataPath, viewStatePath は上位の値と連結      | dataKey.data.path.to      | viewStateKey.case.path              |
+|   C | store-bind | -                 | -                       | id1         | dataPath, viewStatePath を上位から継承。自身の itemId を 上位の (data\|viewState)Path と連結 | dataKey.data.path.to.id1  | viewStateKey.case.path.id1          |
+|   D | store-path | module1:hoge      | module1:viewState.hoge  | -           | no-inherit-data-path, no-inherit-view-state-path 指定の為、本要素で指定した値のみ有効        | module1:hoge              | module1:viewState.hoge              |
+|   E | store-bind | -                 | -                       | huga        | dataPath, viewStatePath を上位から継承。自身の itemId を 上位の (data\|viewState)Path と連結 | module1:hoge.huga         | module1:viewState.hoge.huga         |
 
 ##### コンポーネント定義例
 

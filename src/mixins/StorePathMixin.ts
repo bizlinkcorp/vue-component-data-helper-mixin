@@ -38,18 +38,19 @@ interface VueUserImplements {
  *
  * ##### mixin 詳細
  *
- * |  No | vue type | name                 | value type     | desc                                                                                                                 | remarks            |
- * | --: | -------- | -------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------ |
- * |   1 | props    | dataPath             | string         | data を定義した state パス要素                                                                                       |                    |
- * |   2 | props    | viewStatePath        | string         | viewState を定義した state パス要素                                                                                  |                    |
- * |   3 | props    | inherit              | boolean        | 上位の dataPath, viewStatePath を継承するか。true の場合継承し、false の場合継承しない                               |                    |
- * |   4 | computed | parentInfo           | DataBinderInfo | 上位から引き継がれた `DataBinderInfo`                                                                                |                    |
- * |   5 | computed | provideDataPath      | DataBinderInfo | parentInfo.dataPath + '.' + dataPath の値                                                                            |                    |
- * |   6 | computed | provideViewStatePath | DataBinderInfo | parentInfo.viewStatePath + '.' + viewStatePath の値                                                                  |                    |
- * |   7 | methods  | parentViewState      | any            | parentInfo.viewState() の値                                                                                          | generics 利用可能  |
- * |   8 | methods  | currentViewState     | any            | provideViewStatePath に一致した store の viewState を取得                                                            | generics 利用可能  |
- * |   9 | methods  | provideViewState     | any            | 下位へ引き継ぐ viewState。getProvideViewState の返却値を設定する。getProvideViewState 未実装の場合は空オブジェクト。 | generics 利用可能  |
- * |  10 | methods  | getProvideViewState  | any            | 下位へ引き継ぐ viewState の値を返却する。mixin では未実装。拡張要素。                                                | 利用者にて実装する |
+ * |  No | vue type | name                    | value type     | desc                                                                                                                 | remarks               |
+ * | --: | -------- | ----------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------- | --------------------- |
+ * |   1 | props    | dataPath                | string         | data を定義した state パス要素                                                                                       |                       |
+ * |   2 | props    | viewStatePath           | string         | viewState を定義した state パス要素                                                                                  |                       |
+ * |   3 | props    | notInheritDataPath      | boolean        | 上位の dataPath を継承するか。true の場合継承しない                                                                  | default value = false |
+ * |   4 | props    | notInheritViewStatePath | boolean        | 上位の viewStatePath を継承するか。true の場合継承しない                                                             | default value = false |
+ * |   5 | computed | parentInfo              | DataBinderInfo | 上位から引き継がれた `DataBinderInfo`。inject で指定された値。                                                       |                       |
+ * |   6 | computed | provideDataPath         | DataBinderInfo | parentInfo.dataPath + '.' + dataPath の値                                                                            |                       |
+ * |   7 | computed | provideViewStatePath    | DataBinderInfo | parentInfo.viewStatePath + '.' + viewStatePath の値                                                                  |                       |
+ * |   8 | methods  | parentViewState         | any            | parentInfo.viewState() の値。notInheritViewStatePath が true の場合、空オブジェクトとなる                            | generics 利用可能     |
+ * |   9 | methods  | currentViewState        | any            | provideViewStatePath に一致した store の viewState を取得                                                            | generics 利用可能     |
+ * |  10 | methods  | provideViewState        | any            | 下位へ引き継ぐ viewState。getProvideViewState の返却値を設定する。getProvideViewState 未実装の場合は空オブジェクト。 | generics 利用可能     |
+ * |  11 | methods  | getProvideViewState     | any            | 下位へ引き継ぐ viewState の値を返却する。mixin では未実装。拡張要素。                                                | 利用者にて実装する    |
  */
 export default defineComponent({
   name: 'StorePathMixin',
@@ -89,21 +90,31 @@ export default defineComponent({
       required: false,
       default: undefined,
     },
-    inherit: {
+    notInheritDataPath: {
       type: Boolean,
-      required: false,
+      require: false,
+      default: false,
+    },
+    notInheritViewStatePath: {
+      type: Boolean,
+      require: false,
       default: false,
     },
   },
   computed: {
     parentInfo() {
-      // 継承設定がない場合は、空の親オブジェクトを返却する
-      return this.inherit ? (this as unknown as DataBindInfoInjectedInstance).dataBindInfo : EMPTY_DATA_BIND_INFO;
+      return (this as unknown as DataBindInfoInjectedInstance).dataBindInfo;
     },
     provideDataPath() {
+      if (this.notInheritDataPath) {
+        return this.dataPath;
+      }
       return resolvePath(this.parentInfo.dataPath(), this.dataPath);
     },
     provideViewStatePath() {
+      if (this.notInheritViewStatePath) {
+        return this.viewStatePath;
+      }
       return resolvePath(this.parentInfo.viewStatePath(), this.viewStatePath);
     },
   },
@@ -111,35 +122,40 @@ export default defineComponent({
     /**
      * 上位の viewState を取得する。
      * 上位の情報は inject で設定された情報を使用する。
-     * 自身が root の StorePathMixin の場合は、inject 設定が無いため、root パスの viewState を取得する。
      *
-     * @see {@link rootViewStatePath}
-     * @param inst StorePathMixin
      * @returns 親 viewState 値
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ViewStateデータは任意でどのような値でも指定可能な為、any を許容する
     parentViewState<S = any>(): S {
+      if (this.notInheritViewStatePath) {
+        // viewStatePath を継承しない場合は、空オブジェクトを返却する
+        return EMPTY_OBJECT;
+      }
       return this.parentInfo.viewState<S>();
     },
     /**
-     * 現在パスの viewState の値を取得する
-     * @see {@link currentViewStatePath}
-     * @see {@link ItemViewState}
-     * @param inst StorePathMixin
+     * 現在パスの viewState の値を store state から取得する
+     * @see {@link provideViewStatePath}
      * @returns 現在パスの viewState 値
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ViewStateデータは任意でどのような値でも指定可能な為、any を許容する
     currentViewState<S = any>(): S {
-      return getStoreState<S>(this.$store.state, this.provideViewStatePath);
+      const path = this.provideViewStatePath;
+      if (!path) {
+        // path = undefined の場合は空オブジェクトを返却する
+        return EMPTY_OBJECT;
+      }
+      // パスが設定されていた場合は、viewState を返却する
+      return getStoreState<S>(this.$store.state, path);
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ViewStateデータは任意でどのような値でも指定可能な為、any を許容する
     provideViewState<S = any>(): S {
-      // vue メソッドを用意しておいてもらい、あればそれを呼び出す形にする。無ければデフォルト動作をする。
       const userImplementsInst = this as unknown as VueUserImplements;
+      // 利用者が実装する getProvideViewState メソッドが存在していたら呼び出す
       if (userImplementsInst.getProvideViewState) {
         return userImplementsInst.getProvideViewState<S>();
       }
-
+      // 無ければ空オブジェクトを返却する
       return EMPTY_OBJECT;
     },
   },

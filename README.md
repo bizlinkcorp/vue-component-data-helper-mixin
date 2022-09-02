@@ -1,36 +1,36 @@
 # vue-data-binder
 
-## 解決したい課題
+## Problem to be solved
 
-- Vue Store を利用した画面を作成すると、以下のボイラープレートを作成する必要がある。
-  - データ取得の為の getters
-  - データ設定の為の actions / mutations
-- 少量ならば管理できるが項目が大量になると管理が煩雑になってしまう。
-- store データを画面項目へシンプルな反映／設定を目的として作成した。
+- Creating a screen using Vuex Store requires the creation of the following boilerplate.
+  - getters for data acquisition
+  - actions, mutations for data setup
+- A small amount can be managed, but when the number of items is large, management becomes complicated.
+- It was created to avoid complicated management and to simply reflect/configure Store State values to screen items.
 
-## 機能概要
+## overview
 
-- store 項目レベルで、画面コンポーネントにデータを直接バインドできる。
-- store の階層構造に対してバインドすることができる。
-- store に対して、リアクティブな変更操作を提供する。
-- オプションで項目に表示状態を定義することができ、画面コンポーネントで状態値を自由に利用できる。
-- 表示状態の値は上位を継承する（上位の値と現在の値を鑑みた設定値を利用するには個別に実装が必要）。
+- Store State items can be bound directly to screen components with data.
+- It can be bound to the hierarchical structure of Store State.
+- Provide reactive change operations for Store State.
+- Optionally, the display state can be defined for an item, and the state value can be freely used in screen components.
+- The display state values inherit the upper values (separate implementation is required to use the set values in light of the upper values and the current values).
 
-## ライブラリで公開するコンポーネント
+## Public Components
 
-|  No | 公開名                                           | タイプ        | 説明                                                           | 備考                                                          |
-| --: | ------------------------------------------------ | ------------- | -------------------------------------------------------------- | ------------------------------------------------------------- |
-|   1 | [StoreBindMixin](./src/mixins/StoreBindMixin.ts) | Vue mixin     | Store state と入力項目を結びつけるコンポーネント mixin         | 入力単一項目コンポーネントに設定することを想定                |
-|   2 | [StorePathMixin](./src/mixins/StorePathMixin.ts) | Vue mixin     | StoreBindMixin で参照する項目の Store state パスを設定する     | StoreBindMixin を束ねるコンポーネントに設定することを想定する |
-|   3 | [StorePath](./src/components/StorePath.ts)       | Vue Component | StorePathMixin をカスタム利用しない場合の単一コンポーネント    |                                                               |
-|   4 | [setStoreState](./src/store/StoreControl.ts)     | method        | StoreBindMixin の storeData 設定時に設定する mutation メソッド | root store の mutation に設定する。                           |
-|   5 | [StateSetPayload](./src/store/StoreControl.ts)   | type          | mutation に設定した `setStoreState` の Payload                 | generics を利用して viewState のデータ型を指定可能            |
-|   6 | [ViewStateTree](./src/store/ViewStateTree.ts)    | type          | store state に設定する viewState の tree データ型              | generics を利用して viewState のデータ型を指定可能            |
-|   7 | [DataBinderInfo](./src/mixins/helper.ts)         | type          | StorePathMixin から引き継がれるデータバインド情報              | ViewState を引継ぐ場合、StorePathMixin をカスタムする         |
+|  No | 公開名                                           | タイプ        | 説明                                                                  | 備考                                                         |
+| --: | ------------------------------------------------ | ------------- | --------------------------------------------------------------------- | ------------------------------------------------------------ |
+|   1 | [StoreBindMixin](./src/mixins/StoreBindMixin.ts) | Vue mixin     | Component mixin that associates a store state with an input item.     | Assumed to be set in the input single-item component.        |
+|   2 | [StorePathMixin](./src/mixins/StorePathMixin.ts) | Vue mixin     | Set the store state path of the item referenced by `StoreBindMixin`.  | Assume that `StoreBindMixin` is set to a bundling component. |
+|   3 | [StorePath](./src/components/StorePath.ts)       | Vue Component | Single component without custom `StorePathMixin`.                     |                                                              |
+|   4 | [setStoreState](./src/store/StoreControl.ts)     | method        | Mutation method to be set when setting storeData in `StoreBindMixin`. | Set to root store mutation.                                  |
+|   5 | [StateSetPayload](./src/store/StoreControl.ts)   | type          | Payload of `setStoreState` set to mutation.                           | The data type of viewState can be specified using generics.  |
+|   6 | [ViewStateTree](./src/store/ViewStateTree.ts)    | type          | tree data type of viewState to be set for store state.                | The data type of viewState can be specified using generics.  |
+|   7 | [DataBinderInfo](./src/mixins/helper.ts)         | type          | Databinding information inherited from `StorePathMixin`.              | Custom `StorePathMixin` when taking over ViewState.          |
 
-## getting start
+## Getting Started
 
-シンプルな input text 項目に store の値をバインドを実施する。
+Bind the Store State value to a simple input text item.
 
 ### 1. install package
 
@@ -38,10 +38,10 @@
 npm install vue-data-binder
 ```
 
-### 2. store 設定
+### 2. setting store
 
-1. データバインドしたいデータを定義する
-2. mutations に setStoreState を設定する
+1. Define the data to be data bound.
+2. Set `setStoreState` to mutations.
 
 ```ts
 import Vue from 'vue';
@@ -52,7 +52,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: () => ({
-    // -- 1 -- data.card1 データを設定
+    // -- 1 -- Set "data.card1"
     data: {
       card1: 'card1Value',
     },
@@ -64,12 +64,12 @@ export default new Vuex.Store({
 });
 ```
 
-### 3. StoreBindMixin を適用したコンポーネント作成
+### 3. Component creation with StoreBindMixin applied
 
-ここで作成するコンポーネントは TextBindComp.vue とする。
+The component to be created here is TextBindComp.vue.
 
-1. コンポーネントに StoreBindMixin を設定する
-2. 画面項目に mixin 計算プロパティ storeData を設定する
+1. Set `StoreBindMixin` to the component.
+2. Set the mixin calculation property storeData to a screen item.
 
 ```vue
 <template>
@@ -88,19 +88,19 @@ export default defineComponent({
 </script>
 ```
 
-### 4. アプリにコンポーネントを設定する
+### 4. Set up components in your app
 
-1. パス設定コンポーネント StorePath を適用する
-2. 作成した TextBindComp.vue を適用する
-3. StorePath に dataPath を設定する
-4. TextBindComp に itemId を設定する
+1. Apply the `StorePath` path configuration component.
+2. Apply the TextBindComp.vue you created.
+3. Set `StorePath` to dataPath.
+4. Set itemId to TextBindComp(StoreBindMixin).
 
 ```vue
 <template>
   <div>
     <!-- 3 -->
     <store-path data-path="data">
-      <!-- 4 -- TextBindComp では data.card1 の値を参照する -->
+      <!-- 4 -- TextBindComp refers to the value of "data.card1" -->
       <text-bind-comp item-id="card1" />
     </store-path>
   </div>
@@ -122,7 +122,7 @@ export default defineComponent({
 </script>
 ```
 
-### 実行結果
+### Result
 
 ```html
 <div>
@@ -133,9 +133,9 @@ export default defineComponent({
 </div>
 ```
 
-## 使用方法
+## Usage
 
-[サンプル](./example/)を参照
+See [example](./example/).
 
 ## License
 

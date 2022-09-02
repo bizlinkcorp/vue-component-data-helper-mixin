@@ -7,9 +7,10 @@
   "unpkg": "dist/vue-data-binder.umd.js",
   "typings": "dist/types/vue-data-binder.type.d.ts",
   "files": [
-    "dist/"
+    "dist/",
+    "src/"
   ],
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "homepage": "https://github.com/bizlinkcorp/vue-data-binder",
   "repository": {
     "type": "git",

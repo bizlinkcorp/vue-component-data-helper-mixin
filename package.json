@@ -1,6 +1,6 @@
 {
   "name": "vue-component-data-helper-mixin",
-  "description": "A helper mixins that associates a 'Vue store state' value with a component. Compatible with Vue 2.7.x.",
+  "description": "A helper mixins that associates a 'Vue store state' value with a component.",
   "version": "0.1.0",
   "main": "dist/vue-component-data-helper-mixin.js",
   "module": "dist/vue-component-data-helper-mixin.mjs",
@@ -21,7 +21,8 @@
     "vue",
     "store bind",
     "vuex",
-    "mixin"
+    "mixin",
+    "helper"
   ],
   "scripts": {
     "serve": "vite",

@@ -1,6 +1,6 @@
 {
   "name": "vue-data-binder",
-  "description": "A helper mixins that associates a 'Vue store state' value with a component.",
+  "description": "A helper mixins that associates a 'Vue store state' value with a component. Compatible with Vue 2.7.x.",
   "version": "0.1.0",
   "main": "dist/vue-data-binder.js",
   "module": "dist/vue-data-binder.mjs",

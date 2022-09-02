@@ -1,5 +1,11 @@
 # vue-data-binder
 
+## Compatibility
+
+| vue-data-binder | Vue    | Vuex |
+| --------------- | ------ | ---- |
+| v0.x            | v2.7.x | v3.x |
+
 ## Problem to be solved
 
 - Creating a screen using Vuex Store requires the creation of the following boilerplate.
@@ -8,7 +14,7 @@
 - A small amount can be managed, but when the number of items is large, management becomes complicated.
 - It was created to avoid complicated management and to simply reflect/configure Store State values to screen items.
 
-## overview
+## Overview
 
 - Store State items can be bound directly to screen components with data.
 - It can be bound to the hierarchical structure of Store State.
@@ -32,13 +38,13 @@
 
 Bind the Store State value to a simple input text item.
 
-### 1. install package
+### 1. Install package
 
 ```shell
 npm install vue-data-binder
 ```
 
-### 2. setting store
+### 2. Setting store
 
 1. Define the data to be data bound.
 2. Set `setStoreState` to mutations.

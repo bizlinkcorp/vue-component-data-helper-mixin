@@ -1,6 +1,6 @@
 {
   "name": "vue-component-data-helper-mixin",
-  "description": "A helper mixins that associates a 'Vue store state' value with a component.",
+  "description": "A helper mixins that associates a data with a component.",
   "version": "0.1.0",
   "main": "dist/vue-component-data-helper-mixin.js",
   "module": "dist/vue-component-data-helper-mixin.mjs",

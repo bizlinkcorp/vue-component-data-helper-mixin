@@ -15,6 +15,7 @@
     "types": [],
     "paths": {
       "@/*": ["src/*"],
+      // use only "./example" directory
       "vue-data-binder": ["./src/vue-data-binder.type"]
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]

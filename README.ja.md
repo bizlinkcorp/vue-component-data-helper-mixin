@@ -26,9 +26,9 @@
 
 |  No | 名前                                             | タイプ        | 説明                                                               | 備考                                                              |
 | --: | ------------------------------------------------ | ------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------- |
-|   1 | [StoreBindMixin](./src/mixins/StoreBindMixin.ts) | Vue mixin     | Store State と入力項目を結びつけるコンポーネント mixin。           | 入力単一項目コンポーネントに設定することを想定。                  |
-|   2 | [StorePathMixin](./src/mixins/StorePathMixin.ts) | Vue mixin     | `StoreBindMixin` で参照する項目の Store State パスを設定する。     | `StoreBindMixin` を束ねるコンポーネントに設定することを想定する。 |
-|   3 | [StorePath](./src/components/StorePath.ts)       | Vue Component | `StorePathMixin` をカスタム利用しない場合の単一コンポーネント。    |                                                                   |
+|   1 | [StoreBindMixin](./src/mixins/StoreBindMixin.ts) | vue mixin     | Store State と入力項目を結びつけるコンポーネント mixin。           | 入力単一項目コンポーネントに設定することを想定。                  |
+|   2 | [StorePathMixin](./src/mixins/StorePathMixin.ts) | vue mixin     | `StoreBindMixin` で参照する項目の Store State パスを設定する。     | `StoreBindMixin` を束ねるコンポーネントに設定することを想定する。 |
+|   3 | [StorePath](./src/components/StorePath.ts)       | vue component | `StorePathMixin` をカスタム利用しない場合の単一コンポーネント。    |                                                                   |
 |   4 | [setStoreState](./src/store/StoreControl.ts)     | method        | `StoreBindMixin` の storeData 設定時に設定する mutation メソッド。 | root store の mutation に設定する。                               |
 |   5 | [StateSetPayload](./src/store/StoreControl.ts)   | type          | mutation に設定した `setStoreState` の Payload。                   | generics を利用して viewState のデータ型を指定可能。              |
 |   6 | [ViewStateTree](./src/store/ViewStateTree.ts)    | type          | Store State に設定する viewState の tree データ型。                | generics を利用して viewState のデータ型を指定可能。              |

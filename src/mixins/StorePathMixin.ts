@@ -21,38 +21,46 @@ interface VueUserImplements {
 }
 
 /**
- * store path mixin
+ * # StorePathMixin
+ *
+ * ## ソースコード
+ *
+ * [src/mixins/StorePathMixin.ts](../../src/mixins/StorePathMixin.ts)
+ *
+ * ## Doclet
+ *
+ * store 値までのパスを定義する mixin。
  *
  * @remarks
  *
- * ##### 概要
+ * ### 概要
  *
- * - Store state のデータのパスをコントロールする
- * - path 情報は、vue 機能の provide/inject を利用し、下位コンポーネントへ伝達する
+ * - Store state のデータのパスをコントロールする。
+ * - path 情報は、vue 機能の provide/inject を利用し、下位コンポーネントへ伝達する。
  *
- * ##### 使用方法
+ * ### 使用方法
  *
- * - パスを指定したいコンポーネントの mixin に組み込む
+ * - パスを指定したいコンポーネントの mixin に組み込む。
  * - dataPath, viewStatePath でモジュールを指定する場合は、先頭に `moduleName:` を指定する。
- *   - 参考： `moduleName:path.to`
+ *   - 例： `moduleName:path.to`
  *
- * ##### mixin 詳細
+ * ### mixin 詳細
  *
  * |  No | vue type | name                    | value type     | desc                                                                                                                           | remarks               |
  * | --: | -------- | ----------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------- |
- * |   1 | props    | dataPath                | string         | data を定義した state パス要素                                                                                                 |                       |
- * |   2 | props    | viewStatePath           | string         | viewState を定義した state パス要素                                                                                            |                       |
- * |   3 | props    | notInheritDataPath      | boolean        | 上位の dataPath を継承するか。true の場合継承しない                                                                            | default value = false |
- * |   4 | props    | notInheritViewStatePath | boolean        | 上位の viewStatePath を継承するか。true の場合継承しない                                                                       | default value = false |
+ * |   1 | props    | dataPath                | string         | data を定義した state パス要素。                                                                                               |                       |
+ * |   2 | props    | viewStatePath           | string         | viewState を定義した state パス要素。                                                                                          |                       |
+ * |   3 | props    | notInheritDataPath      | boolean        | 上位の dataPath を継承するか。true の場合継承しない。                                                                          | default value = false |
+ * |   4 | props    | notInheritViewStatePath | boolean        | 上位の viewStatePath を継承するか。true の場合継承しない。                                                                     | default value = false |
  * |   5 | computed | parentInfo              | DataBinderInfo | 上位から引き継がれた `DataBinderInfo`。inject で指定された値。                                                                 |                       |
- * |   6 | computed | provideDataPath         | DataBinderInfo | parentInfo.dataPath + '.' + dataPath の値                                                                                      |                       |
- * |   7 | computed | provideViewStatePath    | DataBinderInfo | parentInfo.viewStatePath + '.' + viewStatePath の値                                                                            |                       |
- * |   8 | methods  | parentViewState         | any            | parentInfo.viewState() の値。notInheritViewStatePath が true の場合、空オブジェクトとなる                                      | generics 利用可能     |
- * |   9 | methods  | currentViewState        | any            | provideViewStatePath に一致した store の viewState を取得                                                                      | generics 利用可能     |
- * |  10 | methods  | provideViewState        | any            | 下位へ引き継ぐ viewState。getProvideViewState の返却値を設定する。getProvideViewState 未実装の場合は currentViewState を返却。 | generics 利用可能     |
- * |  11 | methods  | getProvideViewState     | any            | 下位へ引き継ぐ viewState の値を返却する。mixin では未実装。拡張要素。                                                          | 利用者にて実装する    |
+ * |   6 | computed | provideDataPath         | DataBinderInfo | parentInfo.dataPath + '.' + dataPath の値。                                                                                    |                       |
+ * |   7 | computed | provideViewStatePath    | DataBinderInfo | parentInfo.viewStatePath + '.' + viewStatePath の値。                                                                          |                       |
+ * |   8 | methods  | parentViewState         | any            | parentInfo.viewState() の値。notInheritViewStatePath が true の場合、空オブジェクトとなる。                                    | generics 利用可能。   |
+ * |   9 | methods  | currentViewState        | any            | provideViewStatePath に一致した store の viewState を取得。                                                                    | generics 利用可能。   |
+ * |  10 | methods  | provideViewState        | any            | 下位へ引き継ぐ viewState。getProvideViewState の返却値を設定する。getProvideViewState 未実装の場合は currentViewState を返却。 | generics 利用可能。   |
+ * |  11 | methods  | getProvideViewState     | any            | 下位へ引き継ぐ viewState の値を返却する。mixin では未実装。拡張ポイント。                                                      | 利用者にて実装する。  |
  *
- * ##### 参考：パス要素継承イメージ
+ * ### パス要素継承例
  *
  * ```html
  * <!--
@@ -67,7 +75,7 @@ interface VueUserImplements {
  *       <!-- C -->
  *     </store-bind>
  *   </store-path>
- *   <store-path data-path="module1:hoge" view-state-path="module1:viewState.hoge" no-inherit-data-path no-inherit-view-state-path>
+ *   <store-path data-path="module1:hoge" view-state-path="module1:viewState.hoge" not-inherit-data-path not-inherit-view-state-path>
  *     <!-- D -->
  *     <store-bind item-id="huga">
  *       <!-- E -->
@@ -78,15 +86,17 @@ interface VueUserImplements {
  *
  * 上記の設定状況の場合の、継承状況や項目設定状況
  *
- * |  No | type       | props dataPath    | props viewStatePath     | prop itemId | remarks                                                                                      | provideDataPath \| dataId | provideViewStatePath \| viewStateId |
- * | --: | ---------- | ----------------- | ----------------------- | ----------- | -------------------------------------------------------------------------------------------- | ------------------------- | ----------------------------------- |
- * |   A | store-path | dataKey.data.path | viewStateKey.case1.path | -           | 最上位パス定義                                                                               | dataKey.data.path         | viewStateKey.case.path              |
- * |   B | store-path | to                |                         | -           | dataPath, viewStatePath を上位から継承。自身の dataPath, viewStatePath は上位の値と連結      | dataKey.data.path.to      | viewStateKey.case.path              |
- * |   C | store-bind | -                 | -                       | id1         | dataPath, viewStatePath を上位から継承。自身の itemId を 上位の (data\|viewState)Path と連結 | dataKey.data.path.to.id1  | viewStateKey.case.path.id1          |
- * |   D | store-path | module1:hoge      | module1:viewState.hoge  | -           | no-inherit-data-path, no-inherit-view-state-path 指定の為、本要素で指定した値のみ有効        | module1:hoge              | module1:viewState.hoge              |
- * |   E | store-bind | -                 | -                       | huga        | dataPath, viewStatePath を上位から継承。自身の itemId を 上位の (data\|viewState)Path と連結 | module1:hoge.huga         | module1:viewState.hoge.huga         |
+ * |  No | type       | props dataPath    | props viewStatePath     | prop itemId | remarks                                                                                        | provideDataPath \| dataId | provideViewStatePath \| viewStateId |
+ * | --: | ---------- | ----------------- | ----------------------- | ----------- | ---------------------------------------------------------------------------------------------- | ------------------------- | ----------------------------------- |
+ * |   A | store-path | dataKey.data.path | viewStateKey.case1.path | -           | 最上位パス定義。                                                                               | dataKey.data.path         | viewStateKey.case.path              |
+ * |   B | store-path | to                |                         | -           | dataPath, viewStatePath を上位から継承。自身の dataPath, viewStatePath は上位の値と連結。      | dataKey.data.path.to      | viewStateKey.case.path              |
+ * |   C | store-bind | -                 | -                       | id1         | dataPath, viewStatePath を上位から継承。自身の itemId を 上位の (data\|viewState)Path と連結。 | dataKey.data.path.to.id1  | viewStateKey.case.path.id1          |
+ * |   D | store-path | module1:hoge      | module1:viewState.hoge  | -           | notInheritDataPath, notInheritViewStatePath 指定の為、本要素で指定した値のみ有効。             | module1:hoge              | module1:viewState.hoge              |
+ * |   E | store-bind | -                 | -                       | huga        | dataPath, viewStatePath を上位から継承。自身の itemId を 上位の (data\|viewState)Path と連結。 | module1:hoge.huga         | module1:viewState.hoge.huga         |
  *
  * @example
+ *
+ * ### 実装例
  *
  * ```vue
  * <template>
@@ -97,34 +107,34 @@ interface VueUserImplements {
  *   </div>
  * </template>
  * <script lang="ts">
- *   import { defineComponent } from 'vue';
- *   import { StorePathMixin } from 'vue-data-binder';
- *   import TextBindComp from './TextBindComp.vue'; // StoreBindMixin の example 参照
+ * import { defineComponent } from 'vue';
+ * import { StorePathMixin } from 'vue-data-binder';
+ * import TextBindComp from './TextBindComp.vue'; // StoreBindMixin の example 参照
  *
- *   export default defineComponent({
- *     name: 'CardTemplate',
- *     mixins: [StorePathMixin], // mixins で StorePathMixin を指定する
- *     components: {
- *       TextBindComp,
- *     },
- *     // ...
- *     methods: {
- *       // 必要な場合は個別に実装する
- *       getProvideViewState() {
- *         const current = this.currentViewState<AppViewState>();
- *         const parent = this.parentViewState<AppViewState>();
+ * export default defineComponent({
+ *   name: 'CardTemplate',
+ *   mixins: [StorePathMixin], // mixins で StorePathMixin を指定する
+ *   components: {
+ *     TextBindComp,
+ *   },
+ *   // ...
+ *   methods: {
+ *     // 必要な場合は個別に実装する
+ *     getProvideViewState() {
+ *       const own = this.currentViewState<AppViewState>();
+ *       const parent = this.parentViewState<AppViewState>();
  *
- *         // 上位の viewState を下位に伝搬する
- *         return {
- *           // 設定優先順位： 自ViewState > 親ViewState
- *           // disabled プロパティ
- *           disabled: current?.disabled ?? parent?.disabled,
- *           // readonly プロパティ
- *           readonly: current?.readonly ?? parent?.readonly,
- *         };
- *       },
+ *       // 上位の viewState を下位に伝搬する
+ *       return {
+ *         // 設定優先順位： 自ViewState > 親ViewState
+ *         // disabled プロパティ
+ *         disabled: own?.disabled ?? parent?.disabled,
+ *         // readonly プロパティ
+ *         readonly: own?.readonly ?? parent?.readonly,
+ *       };
  *     },
- *   });
+ *   },
+ * });
  * </script>
  * ```
  */

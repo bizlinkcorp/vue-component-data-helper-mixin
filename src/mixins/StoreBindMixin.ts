@@ -4,39 +4,41 @@ import { DataBinderInfo, EMPTY_DATA_BIND_INFO, resolvePath, DataBindInfoInjected
 import { PROVIDE_DATA_BIND_INFO_NAME } from './StorePathMixin';
 
 /**
- * store value bind mixin
+ * store 値をバインドする mixin。
  *
  * @remarks
  *
- * ##### 概要
+ * ### 概要
  *
- * - Store state の参照／設定を制御する
- * - dataPath, viewStatePath は、vue 機能の inject を利用し、上位コンポーネントから伝達する
+ * - Store state の参照／設定を制御する。
+ * - dataPath, viewStatePath は、vue 機能の inject を利用し、上位コンポーネントから伝達する。
  *
- * ##### 前提条件
+ * ### 前提条件
  *
- * - store mutations に `setStoreState` を指定してあること（setStoreState は store state 編集を実施）
+ * - store mutations に `setStoreState` を指定してあること（setStoreState は store state 編集を実施）。
  *
- * ##### 使用方法
+ * ### 使用方法
  *
- * - コンポーネントに mixin を組み込む
- * - プロパティ itemId に値のキー情報を設定する
+ * - コンポーネントに mixin を組み込む。
+ * - プロパティ itemId に値のキー情報を設定する。
  *
- * ##### Mixin 詳細
+ * ### Mixin 詳細
  *
- * |  No | vue type | name           | value type     | desc                                                      | remarks                                    |
- * | --: | -------- | -------------- | -------------- | --------------------------------------------------------- | ------------------------------------------ |
- * |   1 | props    | itemId         | string         | 項目を一意に指定する ID。Store 参照時のキーとして利用する |                                            |
- * |   2 | computed | parentInfo     | DataBinderInfo | 上位から引き継がれた `DataBinderInfo`                     |
- * |   3 | computed | dataId         | string         | parentInfo.dataPath + '.' + itemId の値                   |                                            |
- * |   4 | computed | viewStateId    | string         | parentInfo.viewStatePath + '.' + itemId の値              |                                            |
- * |   5 | computed | storeData      | any            | dataId に一致した store の値を取得／設定                  |                                            |
- * |   6 | computed | storeViewState | any            | viewStateId に一致した store の viewState を取得          | 上位引継ぎは無し。viewStateId の値のみ取得 |
+ * |  No | vue type | name           | value type     | desc                                                        | remarks                                      |
+ * | --: | -------- | -------------- | -------------- | ----------------------------------------------------------- | -------------------------------------------- |
+ * |   1 | props    | itemId         | string         | 項目を一意に指定する ID。Store 参照時のキーとして利用する。 |                                              |
+ * |   2 | computed | parentInfo     | DataBinderInfo | 上位から引き継がれた `DataBinderInfo`。                     |
+ * |   3 | computed | dataId         | string         | parentInfo.dataPath + '.' + itemId の値。                   |                                              |
+ * |   4 | computed | viewStateId    | string         | parentInfo.viewStatePath + '.' + itemId の値。              |                                              |
+ * |   5 | computed | storeData      | any            | dataId に一致した store の値を取得／設定。                  |                                              |
+ * |   6 | computed | storeViewState | any            | viewStateId に一致した store の viewState を取得。          | 上位引継ぎは無し。viewStateId の値のみ取得。 |
  *
  * - 注意点
  *   - storeViewState では Store の自身のパスの viewState のみ取得する。`parentInfo.viewState()` を利用する場合は、計算プロパティを実装すること。
  *
  * @example
+ *
+ * ### 実装例
  *
  * ```vue
  * <template>
@@ -44,26 +46,26 @@ import { PROVIDE_DATA_BIND_INFO_NAME } from './StorePathMixin';
  *   <input type="text" v-model="storeData" :disabled="storeViewState.disabled" :readonly="storeViewState.readonly" />
  * </template>
  * <script lang="ts">
- *   import { defineComponent } from 'vue';
- *   import { StoreBindMixin } from 'vue-data-binder';
+ * import { defineComponent } from 'vue';
+ * import { StoreBindMixin } from 'vue-data-binder';
  *
- *   export default defineComponent({
- *     name: 'TextBindComp',
- *     mixins: [StoreBindMixin], // mixins で StoreBindMixin を指定する
- *     // ...
- *     computed: {
- *       // parentInfo.viewState() を意識した viewState
- *       itemViewState(): AppViewState {
- *         // 設定優先順位： 自ViewState > 親ViewState > デフォルト
- *         const itemViewState = this.storeViewState as AppViewState;
- *         const parentViewState = this.parentInfo.viewState<AppViewState>();
- *         return {
- *           disabled: itemViewState?.disabled ?? parentViewState.disabled ?? false,
- *           readonly: itemViewState?.readonly ?? parentViewState.readonly ?? false,
- *         };
- *       },
+ * export default defineComponent({
+ *   name: 'TextBindComp',
+ *   mixins: [StoreBindMixin], // mixins で StoreBindMixin を指定する
+ *   // ...
+ *   computed: {
+ *     // parentInfo.viewState() を意識した viewState
+ *     itemViewState(): AppViewState {
+ *       // 設定優先順位： 自ViewState > 親ViewState > デフォルト
+ *       const ownViewState = this.storeViewState as AppViewState;
+ *       const parentViewState = this.parentInfo.viewState<AppViewState>();
+ *       return {
+ *         disabled: ownViewState?.disabled ?? parentViewState.disabled ?? false,
+ *         readonly: ownViewState?.readonly ?? parentViewState.readonly ?? false,
+ *       };
  *     },
- *   });
+ *   },
+ * });
  * </script>
  * ```
  */

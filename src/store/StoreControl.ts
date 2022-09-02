@@ -126,8 +126,8 @@ const setStoreStateInner = <T>(value: T, parentState: any, paths: string[], idx 
  *
  * @remarks
  *
- * - Store mutation にメソッドを設定することを想定したメソッド
- * - mutaion は、StoreBindMixin の storeData setter 計算プロパティから実行される
+ * - Store mutation にメソッドを設定することを想定したメソッド。
+ * - mutaion は、StoreBindMixin の storeData setter 計算プロパティから実行される。
  *
  * @example
  *

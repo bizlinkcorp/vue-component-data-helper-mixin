@@ -1,40 +1,63 @@
 {
-  "name": "vue-data-binder",
+  "name": "vue-component-data-helper-mixin",
+  "description": "A helper mixins that associates a data with a component.",
   "version": "0.1.0",
-  "private": true,
+  "main": "dist/vue-component-data-helper-mixin.js",
+  "module": "dist/vue-component-data-helper-mixin.mjs",
+  "unpkg": "dist/vue-component-data-helper-mixin.umd.js",
+  "typings": "dist/types/vue-component-data-helper-mixin.type.d.ts",
+  "files": [
+    "dist/",
+    "src/",
+    "README.ja.md",
+    "README.md"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/bizlinkcorp/vue-component-data-helper-mixin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bizlinkcorp/vue-component-data-helper-mixin"
+  },
+  "author": "BizLink Co.,Ltd.",
+  "keywords": [
+    "vue",
+    "store bind",
+    "vuex",
+    "mixin",
+    "helper"
+  ],
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "serve": "vite",
+    "build": "npm run build:lib && npm run build:type",
+    "build:lib": "vue-tsc --noEmit -p tsconfig.types.json && vite build",
+    "build:type": "tsc --emitDeclarationOnly --declaration -P tsconfig.types.json",
+    "lint": "eslint \"./{src,example}/**/*.{ts,tsx,vue}\" && prettier --check \"./{src,example}/**/*.{ts,tsx,vue}\"",
+    "test:lint": "eslint \"./tests/**/*.ts\" && prettier --check \"./tests/**/*.ts\"",
+    "test:unit": "vitest --config ./vitest.config.ts run --coverage"
   },
   "dependencies": {
-    "core-js": "^3.8.3",
-    "vue": "^2.6.14",
+    "vue": "^2.7.10",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.1",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
-    "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-plugin-eslint": "~5.0.0",
-    "@vue/cli-plugin-typescript": "~5.0.0",
-    "@vue/cli-plugin-unit-jest": "~5.0.0",
-    "@vue/cli-plugin-vuex": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
-    "@vue/eslint-config-typescript": "^9.1.0",
-    "@vue/test-utils": "^1.1.3",
-    "@vue/vue2-jest": "^27.0.0-alpha.2",
-    "babel-jest": "^27.0.6",
-    "eslint": "^7.32.0",
+    "@vitejs/plugin-vue2": "^1.1.2",
+    "@vitest/coverage-c8": "^0.22.1",
+    "@vue/eslint-config-typescript": "^11.0.0",
+    "@vue/test-utils": "^1.3.0",
+    "eslint": "^8.21.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-vue": "^8.0.3",
-    "jest": "^27.0.5",
+    "eslint-plugin-vue": "^9.3.0",
+    "jsdom": "^20.0.0",
     "prettier": "^2.4.1",
-    "ts-jest": "^27.0.4",
-    "typescript": "~4.5.5",
-    "vue-template-compiler": "^2.6.14"
+    "typescript": "~4.8.2",
+    "unplugin-auto-import": "^0.11.2",
+    "vite": "^3.0.9",
+    "vite-tsconfig-paths": "^3.5.0",
+    "vitest": "^0.22.1",
+    "vue-template-compiler": "^2.6.14",
+    "vue-tsc": "^0.40.5"
   }
 }

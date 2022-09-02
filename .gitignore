@@ -15,9 +15,16 @@ pnpm-debug.log*
 
 # Editor directories and files
 .idea
-.vscode
+# .vscode
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# add
+/coverage
+
+# add for vitest
+# unplugin-auto-import/vite AutoImport で生成される d.ts 
+/auto-imports.d.ts

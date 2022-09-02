@@ -16,7 +16,7 @@
     "paths": {
       "@/*": ["src/*"],
       // use only "./example" directory
-      "vue-data-binder": ["./src/vue-data-binder.type"]
+      "vue-component-data-helper-mixin": ["./src/vue-component-data-helper-mixin.type"]
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },

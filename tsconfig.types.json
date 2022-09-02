@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "./dist/types/"
   },
-  "files": ["src/vue-data-binder.type.ts"],
+  "files": ["src/vue-component-data-helper-mixin.type.ts"],
   "include": ["src/shims-*.d.ts"],
   "exclude": ["node_modules"]
 }

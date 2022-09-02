@@ -1,20 +1,20 @@
 {
-  "name": "vue-data-binder",
+  "name": "vue-component-data-helper-mixin",
   "description": "A helper mixins that associates a 'Vue store state' value with a component. Compatible with Vue 2.7.x.",
   "version": "0.1.0",
-  "main": "dist/vue-data-binder.js",
-  "module": "dist/vue-data-binder.mjs",
-  "unpkg": "dist/vue-data-binder.umd.js",
-  "typings": "dist/types/vue-data-binder.type.d.ts",
+  "main": "dist/vue-component-data-helper-mixin.js",
+  "module": "dist/vue-component-data-helper-mixin.mjs",
+  "unpkg": "dist/vue-component-data-helper-mixin.umd.js",
+  "typings": "dist/types/vue-component-data-helper-mixin.type.d.ts",
   "files": [
     "dist/",
     "src/"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/bizlinkcorp/vue-data-binder",
+  "homepage": "https://github.com/bizlinkcorp/vue-component-data-helper-mixin",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bizlinkcorp/vue-data-binder"
+    "url": "https://github.com/bizlinkcorp/vue-component-data-helper-mixin"
   },
   "author": "BizLink Co.,Ltd.",
   "keywords": [

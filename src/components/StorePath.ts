@@ -36,7 +36,7 @@ import StorePathMixin from '@/mixins/StorePathMixin';
  * </template>
  * <script lang="ts">
  *   import { defineComponent } from 'vue';
- *   import { StorePath } from 'vue-data-binder';
+ *   import { StorePath } from 'vue-component-data-helper-mixin';
  *
  *   export default defineComponent({
  *     name: 'MyComp',

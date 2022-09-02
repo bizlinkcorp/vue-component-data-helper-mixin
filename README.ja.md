@@ -1,10 +1,10 @@
-# vue-data-binder
+# vue-component-data-helper-mixin
 
 ## 互換性
 
-| vue-data-binder | Vue    | Vuex |
-| --------------- | ------ | ---- |
-| v0.x            | v2.7.x | v3.x |
+| vue-component-data-helper-mixin | Vue    | Vuex |
+| ------------------------------- | ------ | ---- |
+| v0.x                            | v2.7.x | v3.x |
 
 ## 解決したい課題
 
@@ -41,7 +41,7 @@
 ### 1. install package
 
 ```shell
-npm install vue-data-binder
+npm install vue-component-data-helper-mixin
 ```
 
 ### 2. store 設定
@@ -52,7 +52,7 @@ npm install vue-data-binder
 ```ts
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { setStoreState } from 'vue-data-binder';
+import { setStoreState } from 'vue-component-data-helper-mixin';
 
 Vue.use(Vuex);
 
@@ -84,7 +84,7 @@ export default new Vuex.Store({
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { StoreBindMixin } from 'vue-data-binder';
+import { StoreBindMixin } from 'vue-component-data-helper-mixin';
 
 export default defineComponent({
   name: 'TextBindComp',
@@ -113,7 +113,7 @@ export default defineComponent({
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { StorePath } from 'vue-data-binder';
+import { StorePath } from 'vue-component-data-helper-mixin';
 import TextBindComp from './TextBindComp.vue';
 
 export default defineComponent({

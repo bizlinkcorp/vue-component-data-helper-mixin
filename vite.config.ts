@@ -17,10 +17,10 @@ export default defineConfig({
     // ライブラリモードでビルドする場合は、build.lib の設定を追加する
     lib: {
       // ライブラリエントリポイント
-      entry: './src/vue-data-binder.ts',
+      entry: './src/vue-component-data-helper-mixin.ts',
       formats: ['es', 'cjs', 'umd' /*, 'iife' */],
       // ライブラリ名
-      name: '@bizlink/vue-data-binder',
+      name: 'vue-component-data-helper-mixin',
     },
     rollupOptions: {
       // ライブラリにバンドルされるべきではない依存関係を外部化する

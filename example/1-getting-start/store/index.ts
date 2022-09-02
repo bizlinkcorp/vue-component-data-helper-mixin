@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { setStoreState } from 'vue-data-binder';
+import { setStoreState } from 'vue-component-data-helper-mixin';
 
 Vue.use(Vuex);
 

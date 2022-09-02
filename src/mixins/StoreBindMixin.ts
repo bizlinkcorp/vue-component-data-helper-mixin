@@ -47,7 +47,7 @@ import { PROVIDE_DATA_BIND_INFO_NAME } from './StorePathMixin';
  * </template>
  * <script lang="ts">
  * import { defineComponent } from 'vue';
- * import { StoreBindMixin } from 'vue-data-binder';
+ * import { StoreBindMixin } from 'vue-component-data-helper-mixin';
  *
  * export default defineComponent({
  *   name: 'TextBindComp',

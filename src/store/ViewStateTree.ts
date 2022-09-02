@@ -8,7 +8,7 @@
  * @example
  *
  * ```ts
- * import { ViewStateTree } from 'vue-data-binder';
+ * import { ViewStateTree } from 'vue-component-data-helper-mixin';
  *
  * // アプリケーションで定義する画面状態を定義する
  *

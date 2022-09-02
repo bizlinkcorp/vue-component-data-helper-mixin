@@ -13,7 +13,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { StorePath } from 'vue-data-binder';
+import { StorePath } from 'vue-component-data-helper-mixin';
 import TextBindComp from './TextBindComp.vue';
 
 export default defineComponent({

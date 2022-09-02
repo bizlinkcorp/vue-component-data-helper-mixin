@@ -108,7 +108,7 @@ interface VueUserImplements {
  * </template>
  * <script lang="ts">
  * import { defineComponent } from 'vue';
- * import { StorePathMixin } from 'vue-data-binder';
+ * import { StorePathMixin } from 'vue-component-data-helper-mixin';
  * import TextBindComp from './TextBindComp.vue'; // StoreBindMixin の example 参照
  *
  * export default defineComponent({

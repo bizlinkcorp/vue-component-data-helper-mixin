@@ -19,9 +19,9 @@
   "author": "BizLink Co.,Ltd.",
   "keywords": [
     "vue",
-    "bind",
-    "store",
-    "vuex"
+    "store bind",
+    "vuex",
+    "mixin"
   ],
   "scripts": {
     "serve": "vite",

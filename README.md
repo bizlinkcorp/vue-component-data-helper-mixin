@@ -18,7 +18,7 @@
 
 ## Public Components
 
-|  No | 公開名                                           | タイプ        | 説明                                                                  | 備考                                                         |
+|  No | Name                                             | Type          | Description                                                           | Remarks                                                      |
 | --: | ------------------------------------------------ | ------------- | --------------------------------------------------------------------- | ------------------------------------------------------------ |
 |   1 | [StoreBindMixin](./src/mixins/StoreBindMixin.ts) | Vue mixin     | Component mixin that associates a store state with an input item.     | Assumed to be set in the input single-item component.        |
 |   2 | [StorePathMixin](./src/mixins/StorePathMixin.ts) | Vue mixin     | Set the store state path of the item referenced by `StoreBindMixin`.  | Assume that `StoreBindMixin` is set to a bundling component. |

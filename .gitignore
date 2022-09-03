@@ -24,6 +24,7 @@ pnpm-debug.log*
 
 # add
 /coverage
+*.tgz
 
 # add for vitest
 # unplugin-auto-import/vite AutoImport で生成される d.ts 

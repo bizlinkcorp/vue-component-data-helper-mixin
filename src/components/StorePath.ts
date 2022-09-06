@@ -1,4 +1,4 @@
-import { CreateElement, defineComponent, VNode } from 'vue';
+import { defineComponent, h, VNode } from 'vue';
 import StorePathMixin from '@/mixins/StorePathMixin';
 
 /**
@@ -21,6 +21,12 @@ import StorePathMixin from '@/mixins/StorePathMixin';
  * - div 要素を配置する。
  * - 属性値(class 等)は div に引継ぐ。
  *
+ * ### Component 詳細
+ *
+ * |  No | vue type | name          | value type | desc                 | remarks                                               |
+ * | --: | -------- | ------------- | ---------- | -------------------- | ----------------------------------------------------- |
+ * |   1 | props    | childNodeOnly | boolean    | 子ノードのみ描画する | true に設定された場合、属性値(class 等)は引き継がない |
+ *
  * @example
  *
  * ### コンポーネント利用方法
@@ -28,7 +34,7 @@ import StorePathMixin from '@/mixins/StorePathMixin';
  * ```html
  * <template>
  *   <div class="comp-root">
- *     <store-path m-data="data.path.to" m-view-state="viewState.path.to" class="store-path">
+ *     <store-path m-data="data.path.to" m-view-state="viewState.path.to" class="store-path" :child-node-only="false">
  *       <div class="child1">...</div>
  *       <div class="child2">...</div>
  *     </store-path>
@@ -48,7 +54,7 @@ import StorePathMixin from '@/mixins/StorePathMixin';
  * </script>
  * ```
  *
- * ### 描画結果
+ * ### 描画結果(childNodeOnly = false)
  *
  * ```html
  * <div class="comp-root">
@@ -59,13 +65,31 @@ import StorePathMixin from '@/mixins/StorePathMixin';
  *   </div>
  * </div>
  * ```
- */
+ *
+ * ### 描画結果(childNodeOnly = true)
+ *
+ * ```html
+ * <div class="comp-root">
+ *   <div class="child1">...</div>
+ *   <div class="child2">...</div>
+ * </div>
+ * ``` */
 export default defineComponent({
   name: 'StorePath',
   mixins: [StorePathMixin],
-  render(h: CreateElement): VNode {
-    const children = (this.$scopedSlots.default ? this.$scopedSlots.default({}) : []) || [];
-    // TODO タグ抜きで定義できれば実施したい。が、実施手段がない。Vue 3で対応できるか検討する。
+  props: {
+    childNodeOnly: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
+  render(): VNode | VNode[] {
+    const children = (this.$slots.default ? this.$slots.default({}) : []) || [];
+    if (this.childNodeOnly) {
+      // プロパティが設定されていた場合は、子ノードを返却する
+      return children;
+    }
     return h('div', this.$attrs, children);
   },
 });

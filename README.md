@@ -4,10 +4,10 @@ Click [here](./README.ja.md) for the Japanese README.
 
 ## Compatibility
 
-| vue-component-data-helper-mixin | Vue    | Vuex | remarks         |
-| ------------------------------- | ------ | ---- | --------------- |
-| v0.x                            | v2.7.x | v3.x |                 |
-| v1.x                            | v3.x   | v4.x | Now responding. |
+| vue-component-data-helper-mixin | Vue    | Vuex | remarks |
+| ------------------------------- | ------ | ---- | ------- |
+| v0.x                            | v2.7.x | v3.x |         |
+| v1.x                            | v3.x   | v4.x |         |
 
 ## Problem to be solved
 

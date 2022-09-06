@@ -1,10 +1,7 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createStore } from 'vuex';
 import { setStoreState } from 'vue-component-data-helper-mixin';
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+export default createStore({
   state: () => ({
     // -- 1 -- data.card1 データを設定
     data: {

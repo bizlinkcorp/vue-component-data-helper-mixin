@@ -1,7 +1,7 @@
 {
   "name": "vue-component-data-helper-mixin",
   "description": "A helper mixins that associates a data with a component.",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "main": "dist/vue-component-data-helper-mixin.js",
   "module": "dist/vue-component-data-helper-mixin.mjs",
   "unpkg": "dist/vue-component-data-helper-mixin.umd.js",
@@ -35,17 +35,13 @@
     "test:lint": "eslint \"./tests/**/*.ts\" && prettier --check \"./tests/**/*.ts\"",
     "test:unit": "vitest --config ./vitest.config.ts run --coverage"
   },
-  "dependencies": {
-    "vue": "^2.7.10",
-    "vuex": "^3.6.2"
-  },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
-    "@vitejs/plugin-vue2": "^1.1.2",
-    "@vitest/coverage-c8": "^0.22.1",
+    "@vitejs/plugin-vue": "^3.0.3",
+    "@vitest/coverage-c8": "^0.23.0",
     "@vue/eslint-config-typescript": "^11.0.0",
-    "@vue/test-utils": "^1.3.0",
+    "@vue/test-utils": "^2.0.2",
     "eslint": "^8.21.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -56,8 +52,12 @@
     "unplugin-auto-import": "^0.11.2",
     "vite": "^3.0.9",
     "vite-tsconfig-paths": "^3.5.0",
-    "vitest": "^0.22.1",
+    "vitest": "^0.23.0",
     "vue-template-compiler": "^2.6.14",
-    "vue-tsc": "^0.40.5"
+    "vue-tsc": "^0.40.7"
+  },
+  "dependencies": {
+    "vue": "^3.2.38",
+    "vuex": "^4.0.2"
   }
 }

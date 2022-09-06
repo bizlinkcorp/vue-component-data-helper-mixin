@@ -1,8 +1,5 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createStore } from 'vuex';
 import { setStoreState, ViewStateTree } from 'vue-component-data-helper-mixin';
-
-Vue.use(Vuex);
 
 export interface AppViewState {
   disabled?: boolean;
@@ -11,7 +8,7 @@ export interface AppViewState {
 
 export type AppViewStateTree = ViewStateTree<AppViewState>;
 
-export default new Vuex.Store({
+export default createStore({
   state: () => ({
     data: {
       card1: {

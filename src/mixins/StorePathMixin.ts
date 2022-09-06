@@ -147,8 +147,8 @@ export default defineComponent({
     },
   },
   provide() {
-    const dataPathFn = (): string => this.provideDataPath;
-    const viewStatePathFn = (): string => this.provideViewStatePath;
+    const dataPathFn = (): string | undefined => this.provideDataPath;
+    const viewStatePathFn = (): string | undefined => this.provideViewStatePath;
     const viewStateFn = <S>(): S => this.provideViewState<S>();
     return {
       [PROVIDE_DATA_BIND_INFO_NAME]: {
@@ -188,16 +188,16 @@ export default defineComponent({
     },
   },
   computed: {
-    parentInfo() {
+    parentInfo(): DataBinderInfo {
       return (this as unknown as DataBindInfoInjectedInstance).dataBindInfo;
     },
-    provideDataPath() {
+    provideDataPath(): string | undefined {
       if (this.mNotInheritData) {
         return this.mData;
       }
       return resolvePath(this.parentInfo.dataPath(), this.mData);
     },
-    provideViewStatePath() {
+    provideViewStatePath(): string | undefined {
       if (this.mNotInheritViewState) {
         return this.mViewState;
       }

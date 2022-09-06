@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 /**
  * ストア設定ペイロード
  * @see {@link setStoreState}
@@ -107,13 +105,11 @@ export const getStoreState = <T = any>(storeState: any, path: string): T => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const setStoreStateInner = <T>(value: T, parentState: any, paths: string[], idx = 0): void => {
   if (paths.length - 1 === idx) {
-    // https://v2.vuejs.org/v2/guide/reactivity.html#For-Objects
-    Vue.set(parentState, paths[idx], value);
+    parentState[paths[idx]] = value;
   } else {
     if (!parentState[paths[idx]]) {
       // undefined の場合にオブジェクト設定
-      // https://v2.vuejs.org/v2/guide/reactivity.html#For-Objects
-      Vue.set(parentState, paths[idx], {});
+      parentState[paths[idx]] = {};
     }
 
     // 再帰call

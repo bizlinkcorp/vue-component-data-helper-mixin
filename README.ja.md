@@ -4,10 +4,10 @@
 
 ## 互換性
 
-| vue-component-data-helper-mixin | Vue    | Vuex | 備考   |
-| ------------------------------- | ------ | ---- | ------ |
-| v0.x                            | v2.7.x | v3.x |        |
-| v1.x                            | v3.x   | v4.x | 対応中 |
+| vue-component-data-helper-mixin | Vue    | Vuex | 備考 |
+| ------------------------------- | ------ | ---- | ---- |
+| v0.x                            | v2.7.x | v3.x |      |
+| v1.x                            | v3.x   | v4.x |      |
 
 ## 解決したい課題
 
